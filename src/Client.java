@@ -1,15 +1,25 @@
 public class Client
 {
     private String name;
-    private String SureName;
+    private String sureName;
 
-    public Client(String name, String SureName)
+    public Client(String name, String sureName)
     {
-        if (name.isEmpty() || SureName.isEmpty())
-            throw new IllegalArgumentException("Ім'я або прізвище не може бути пустим!");
-        else {
-            this.name = name;
-            this.SureName = SureName;
-        }
+        if (name == null)
+            throw new IllegalArgumentException("Ім'я не може бути пустим!");
+
+        if (sureName == null)
+            throw new IllegalArgumentException("Прізвище не може бути пустим!");
+
+        this.name = name;
+        this.sureName = sureName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSureName() {
+        return sureName;
     }
 }

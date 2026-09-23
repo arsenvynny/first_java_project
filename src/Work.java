@@ -4,23 +4,45 @@ public class Work
 {
     private String description;
     private boolean status;
-    private BigDecimal WorkCost;
-    private BigDecimal AutoPartsCost;
+    private BigDecimal workCost;
+    private BigDecimal autoPartsCost;
 
-    public Work(String description, boolean status, String WorkCost, String AutoPartsCost)
+    public Work(String description, boolean status, String workCost, String autoPartsCost)
     {
-        if (description.isEmpty())
+        if (description == null)
             throw new IllegalArgumentException("Опис не може бути порожнім");
-        else this.description = description;
 
-        if (new BigDecimal(WorkCost).compareTo(BigDecimal.ZERO) < 0 )
+        if (workCost == null || autoPartsCost == null)
+            throw new IllegalArgumentException("Ціни не можуть бути пустими");
+
+        if (workCost.matches(".*[^0-9.].*"))
+            throw new IllegalArgumentException("Введена некоректна ціна");
+
+        if (new BigDecimal(workCost).compareTo(BigDecimal.ZERO) < 0 )
             throw new IllegalArgumentException("Ціна не може бути від'ємною");
-        else this.WorkCost = new BigDecimal(WorkCost);
 
-        if (new BigDecimal(AutoPartsCost).compareTo(BigDecimal.ZERO) < 0 )
+        if (new BigDecimal(autoPartsCost).compareTo(BigDecimal.ZERO) < 0 )
             throw new IllegalArgumentException("Ціна не може бути від'ємною");
-        else this.AutoPartsCost = new BigDecimal(AutoPartsCost);
 
+        this.autoPartsCost = new BigDecimal(autoPartsCost);
+        this.workCost = new BigDecimal(workCost);
+        this.description = description;
         this.status = status;
+    }
+
+    public BigDecimal getWorkCost() {
+        return workCost;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getAutoPartsCost() {
+        return autoPartsCost;
     }
 }

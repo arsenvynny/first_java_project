@@ -6,20 +6,38 @@ public class Car
     private  String mark;
     private  int year;
     private  Client owner;
-    private  String VinCode;
+    private  String vinCode;
 
-    public Car(String mark, String model, int year, Client owner, String VinCode)
+    public String getVinCode() {
+        return vinCode;
+    }
+
+    public Client getOwner() {
+        return owner;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public Car(String mark, String model, int year, Client owner, String vinCode)
     {
-        String FinalVinCode = VinCode.replace(" ", "");
-
-        if (FinalVinCode.length() != 17)
+        if (vinCode == null)
             throw new IllegalArgumentException("Недостовірний VinCode");
-        else this.VinCode = FinalVinCode;
 
         if (year < 1981 || year > 2026)
             throw new IllegalArgumentException("Рік випуску недостовірний");
-        else this.year = year;
 
+        this.vinCode = vinCode;
+        this.year = year;
         this.model = model;
         this.mark = mark;
         this.owner = owner;

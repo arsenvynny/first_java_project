@@ -7,12 +7,26 @@ public class Order
     private List<Work> work;
     private Mechanic mechanic;
 
-    public Order(Car car, List<Work> work, Mechanic mechanic)
+    public Order(Car car)
     {
         this.car = car;
-        this.work = work;
-        this.mechanic = mechanic;
 
         status = OrderStatus.CREATED;
+    }
+
+    public List<Work> getWork() {
+        return work;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public Mechanic getMechanic() {
+        return mechanic;
+    }
+
+    public Car getCar() {
+        return car;
     }
 }
