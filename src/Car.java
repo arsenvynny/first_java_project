@@ -1,5 +1,3 @@
-import javax.management.BadAttributeValueExpException;
-
 public class Car
 {
     private  String model;

@@ -3,11 +3,11 @@ import java.math.BigDecimal;
 public class Work
 {
     private String description;
-    private boolean status;
+    private boolean isCompleted;
     private BigDecimal workCost;
     private BigDecimal autoPartsCost;
 
-    public Work(String description, boolean status, String workCost, String autoPartsCost)
+    public Work(String description, String workCost, String autoPartsCost)
     {
         if (description == null)
             throw new IllegalArgumentException("Опис не може бути порожнім");
@@ -27,7 +27,7 @@ public class Work
         this.autoPartsCost = new BigDecimal(autoPartsCost);
         this.workCost = new BigDecimal(workCost);
         this.description = description;
-        this.status = status;
+        isCompleted = false;
     }
 
     public BigDecimal getWorkCost() {
@@ -35,7 +35,7 @@ public class Work
     }
 
     public boolean isStatus() {
-        return status;
+        return isCompleted;
     }
 
     public String getDescription() {

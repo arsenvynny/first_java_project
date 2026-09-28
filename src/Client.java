@@ -1,7 +1,7 @@
 public class Client
 {
     private String name;
-    private String sureName;
+    private String surName;
 
     public Client(String name, String sureName)
     {
@@ -12,7 +12,7 @@ public class Client
             throw new IllegalArgumentException("Прізвище не може бути пустим!");
 
         this.name = name;
-        this.sureName = sureName;
+        this.surName = sureName;
     }
 
     public String getName() {
@@ -20,6 +20,6 @@ public class Client
     }
 
     public String getSureName() {
-        return sureName;
+        return surName;
     }
 }

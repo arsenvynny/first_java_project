@@ -1,7 +1,7 @@
 public class Mechanic
 {
     private String name;
-    private boolean isAvailable;
+    private boolean status;
     private Specialization specialization;
 
     public Mechanic(String name, Specialization specialization)
@@ -10,7 +10,7 @@ public class Mechanic
             throw new IllegalArgumentException("Ім'я не може бути пустим");
 
         this.name = name;
-        isAvailable = true;
+        status = true;
         this.specialization = specialization;
     }
 
@@ -18,11 +18,27 @@ public class Mechanic
         return specialization;
     }
 
+    public void makeBusy()
+    {
+        if (!status)
+            throw new IllegalArgumentException("Механік уже зайнятий");
+
+        status = false;
+    }
+
+    public void makeFree()
+    {
+        if (status)
+            throw new IllegalArgumentException("Механік уже зайнятий");
+
+        status = true;
+    }
+
     public String getName() {
         return name;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean getStatus() {
+        return status;
     }
 }
