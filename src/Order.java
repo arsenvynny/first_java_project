@@ -44,7 +44,7 @@ public class Order
         if (!works.isEmpty())
         {
             for (Work item : works)
-                if (item.getSpecialization() == work.getSpecialization())
+                if (item.getSpecialization() != work.getSpecialization())
                     throw  new IllegalStateException("Ця робота не підходить за спеціалізацією");
         }
 
@@ -140,7 +140,7 @@ public class Order
         }
 
         if (priority == Priority.URGED)
-            totalPrice = totalPrice.add(totalPrice.multiply(CONSTANS.URGED.FEE));
+            totalPrice = totalPrice.add(totalPrice.multiply(CONSTANTS.URGENT.FEE));
 
         return totalPrice;
     }
@@ -161,14 +161,13 @@ public class Order
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return getStatus() == order.getStatus() &&
-                Objects.equals(getCar(), order.getCar()) &&
+        return  Objects.equals(getCar(), order.getCar()) &&
                 Objects.equals(works, order.works) &&
                 Objects.equals(getMechanic(), order.getMechanic());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStatus(), getCar(), works, getMechanic());
+        return Objects.hash(getCar(), works, getMechanic());
     }
 }
