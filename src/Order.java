@@ -11,6 +11,7 @@ public class Order
     private Mechanic mechanic;
     private Priority priority;
     private Specialization specialization;
+    private List<Event> events = new ArrayList<>();
 
     public Order(Car car, Priority priority)
     {

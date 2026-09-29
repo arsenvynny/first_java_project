@@ -12,10 +12,26 @@ public class ServiceStorage {
     ServiceStorage()
     {}
 
+    public List<Car> getCarList() {
+        return carList;
+    }
+
+    public List<Client> getClientList() {
+        return clientList;
+    }
+
+    public List<Mechanic> getMechanicList() {
+        return mechanicList;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
     public void registerCar(final Car car)
     {
         for(Car value : carList)
-            if (value.equals(car))
+            if (value.getVinCode().equals(car.getVinCode()))
                 throw new IllegalStateException("Це авто уже зареєстроване у сервісі");
 
         carList.add(car);
@@ -94,5 +110,20 @@ public class ServiceStorage {
         }
 
         return orders;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceStorage that = (ServiceStorage) o;
+        return  Objects.equals(clientList, that.clientList) &&
+                Objects.equals(carList, that.carList) &&
+                Objects.equals(mechanicList, that.mechanicList) &&
+                Objects.equals(orderList, that.orderList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientList, carList, mechanicList, orderList);
     }
 }

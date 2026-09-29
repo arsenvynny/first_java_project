@@ -30,7 +30,7 @@ public class Car
 
     public Car(String mark, String model, int year, Client owner, String vinCode)
     {
-        if (vinCode == null)
+        if (vinCode == null || vinCode.isEmpty())
             throw new IllegalArgumentException("Недостовірний VinCode");
 
         if (year < 1981 || year > 2026)

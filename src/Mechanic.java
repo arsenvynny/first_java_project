@@ -48,13 +48,12 @@ public class Mechanic
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Mechanic mechanic = (Mechanic) o;
-        return status == mechanic.status &&
-                Objects.equals(getName(), mechanic.getName()) &&
+        return  Objects.equals(getName(), mechanic.getName()) &&
                 getSpecialization() == mechanic.getSpecialization();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), status, getSpecialization());
+        return Objects.hash(getName(), getSpecialization());
     }
 }

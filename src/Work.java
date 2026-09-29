@@ -43,15 +43,14 @@ public class Work
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Work work = (Work) o;
-        return isCompleted == work.isCompleted &&
-                Objects.equals(description, work.description) &&
+        return  Objects.equals(description, work.description) &&
                 Objects.equals(workCost, work.workCost) &&
                 Objects.equals(autoPartsCost, work.autoPartsCost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, isCompleted, workCost, autoPartsCost);
+        return Objects.hash(description, workCost, autoPartsCost);
     }
 
     public Specialization getSpecialization() {
