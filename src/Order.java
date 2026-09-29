@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Order
     public void assignMechanic(final Mechanic mechanic)
     {
         if (status == OrderStatus.CANCELLED || status == OrderStatus.COMPLETED)
-          throw new IllegalStateException("Механіка не можна назначати на скаcоване або закінчене замовлення");
+          throw new IllegalStateException("Механіка не можна назначати на скасоване або закінчене замовлення");
 
         if (mechanic == null)
             throw new IllegalStateException("Немає механіка");
@@ -62,7 +63,7 @@ public class Order
         status = OrderStatus.DIAGNOSED;
     }
 
-    public void approve(final ArrayList<Work> works)
+    public void approve()
     {
         if (status != OrderStatus.DIAGNOSED)
             throw new IllegalStateException("Погодити можна тільки після проведення діагностики");
@@ -70,19 +71,16 @@ public class Order
         if (works == null)
             throw new IllegalStateException("Відсутній список робіт");
 
-        for (Work item : works)
-            if (!item.isStatus())
-                this.works.add(item);
-
         status = OrderStatus.APPROVED;
     }
 
-    public void makeInProgess(final Mechanic mechanic)
+    public void makeInProgress()
     {
         if (status != OrderStatus.APPROVED)
             throw new IllegalStateException("До виконання приступають тільки погоджені замовлення");
 
-        assignMechanic(mechanic);
+        if (mechanic == null)
+            throw new IllegalStateException("Механік відсутній");
 
         status = OrderStatus.IN_PROGRESS;
     }
@@ -98,12 +96,36 @@ public class Order
 
     public void cancel()
     {
-        if (status == OrderStatus.COMPLETED)
-            throw new IllegalStateException("Це замовлення вже виконане");
+        if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
+            throw new IllegalStateException("Це замовлення не може бути скасованим");
 
         status = OrderStatus.CANCELLED;
 
         if (mechanic != null)
             mechanic.makeFree();
+    }
+
+    public BigDecimal calculateWorkPrice()
+    {
+        BigDecimal totalPrice = new BigDecimal("0");
+
+        for (Work item : works)
+        {
+            totalPrice = totalPrice.add(item.getWorkCost());
+        }
+
+        return totalPrice;
+    }
+
+    public BigDecimal calculatePartsPrice()
+    {
+        BigDecimal totalPrice = new BigDecimal("0");
+
+        for (Work item : works)
+        {
+            totalPrice = totalPrice.add(item.getAutoPartsCost());
+        }
+
+        return totalPrice;
     }
 }

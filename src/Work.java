@@ -7,6 +7,7 @@ public class Work
     private BigDecimal workCost;
     private BigDecimal autoPartsCost;
 
+
     public Work(String description, String workCost, String autoPartsCost)
     {
         if (description == null)
@@ -35,7 +36,7 @@ public class Work
 
     public BigDecimal getWorkCost() { return workCost; }
 
-    public boolean isStatus() { return isCompleted; }
+    public boolean isCompleted() { return isCompleted; }
 
     public String getDescription() {
         return description;
