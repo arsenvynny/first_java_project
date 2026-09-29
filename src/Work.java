@@ -15,9 +15,6 @@ public class Work
         if (workCost == null || autoPartsCost == null)
             throw new IllegalArgumentException("Ціни не можуть бути пустими");
 
-        if (workCost.matches(".*[^0-9.].*"))
-            throw new IllegalArgumentException("Введена некоректна ціна");
-
         if (new BigDecimal(workCost).compareTo(BigDecimal.ZERO) < 0 )
             throw new IllegalArgumentException("Ціна не може бути від'ємною");
 
@@ -30,13 +27,15 @@ public class Work
         isCompleted = false;
     }
 
-    public BigDecimal getWorkCost() {
-        return workCost;
+    public void makeDone()
+    {
+        isCompleted = true;
     }
 
-    public boolean isStatus() {
-        return isCompleted;
-    }
+
+    public BigDecimal getWorkCost() { return workCost; }
+
+    public boolean isStatus() { return isCompleted; }
 
     public String getDescription() {
         return description;

@@ -5,7 +5,7 @@ public class Order
 {
     private OrderStatus status;
     private Car car;
-    private List<Work> work;
+    private List<Work> works = new ArrayList<>();
     private Mechanic mechanic;
 
     public Order(Car car)
@@ -13,11 +13,10 @@ public class Order
         this.car = car;
 
         status = OrderStatus.CREATED;
-        this.work = new ArrayList<>();
     }
 
     public List<Work> getWork() {
-        return work;
+        return works;
     }
 
     public OrderStatus getStatus() {
@@ -32,21 +31,24 @@ public class Order
         return car;
     }
 
-    public void addWork(Work work)
+    public void addWork(final Work work)
     {
-        this.work.add(work);   
+        if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
+            throw new IllegalStateException("Роботу не можна додати до виконаного або скасованого замовлення");
+
+        this.works.add(work);
     }
 
-    public void assignMechanic(Mechanic mechanic)
+    public void assignMechanic(final Mechanic mechanic)
     {
         if (status == OrderStatus.CANCELLED || status == OrderStatus.COMPLETED)
-          throw new IllegalArgumentException("Механіка не можна назначати на скачоване або закінчене замовлення");
+          throw new IllegalStateException("Механіка не можна назначати на скаcоване або закінчене замовлення");
 
         if (mechanic == null)
-            throw new IllegalArgumentException("Немає механіка");
+            throw new IllegalStateException("Немає механіка");
 
-        if (mechanic.getStatus())
-            throw new IllegalArgumentException("Механік зайнятий");
+        if (!mechanic.isAvailable())
+            throw new IllegalStateException("Механік зайнятий");
 
         this.mechanic = mechanic;
         mechanic.makeBusy();
@@ -55,23 +57,32 @@ public class Order
     public void diagnose()
     {
         if (status != OrderStatus.CREATED)
-            throw new RuntimeException("Провести діагностику можна тільки для новостворених замовлень");
+            throw new IllegalStateException("Провести діагностику можна тільки для новостворених замовлень");
 
         status = OrderStatus.DIAGNOSED;
     }
 
-    public void approve()
+    public void approve(final ArrayList<Work> works)
     {
         if (status != OrderStatus.DIAGNOSED)
-            throw new RuntimeException("Погодити можна тільки після проведення діагностики");
+            throw new IllegalStateException("Погодити можна тільки після проведення діагностики");
+
+        if (works == null)
+            throw new IllegalStateException("Відсутній список робіт");
+
+        for (Work item : works)
+            if (!item.isStatus())
+                this.works.add(item);
 
         status = OrderStatus.APPROVED;
     }
 
-    public void make_in_progress()
+    public void makeInProgess(final Mechanic mechanic)
     {
         if (status != OrderStatus.APPROVED)
-            throw new RuntimeException("До виконання приступають тільки погоджені замовлення");
+            throw new IllegalStateException("До виконання приступають тільки погоджені замовлення");
+
+        assignMechanic(mechanic);
 
         status = OrderStatus.IN_PROGRESS;
     }
@@ -79,7 +90,7 @@ public class Order
     public void complete()
     {
         if (status != OrderStatus.IN_PROGRESS)
-            throw new RuntimeException("Закінчити можна тільки ті замовлення, які почали виконуватись");
+            throw new IllegalStateException("Закінчити можна тільки ті замовлення, які почали виконуватись");
 
         mechanic.makeFree();
         status = OrderStatus.COMPLETED;
@@ -88,11 +99,11 @@ public class Order
     public void cancel()
     {
         if (status == OrderStatus.COMPLETED)
-            throw new RuntimeException("Це замовлення вже виконане");
-
-        mechanic.makeFree();
+            throw new IllegalStateException("Це замовлення вже виконане");
 
         status = OrderStatus.CANCELLED;
-        mechanic.makeFree();
+
+        if (mechanic != null)
+            mechanic.makeFree();
     }
 }

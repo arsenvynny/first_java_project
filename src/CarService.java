@@ -15,21 +15,21 @@ public class CarService {
         mechanicList = new ArrayList<Mechanic>();
     }
 
-    public void registerCar(Car car)
+    public void registerCar(final Car car)
     {
         for(Car value : carList)
             if (Objects.equals(value.getVinCode(), car.getVinCode()))
-                throw new RuntimeException("Це авто уже зареєстроване у сервісі");
+                throw new IllegalStateException("Це авто уже зареєстроване у сервісі");
 
         carList.add(car);
     }
 
-    public void registerClient(Client client)
+    public void registerClient(final Client client)
     {
         clientList.add(client);
     }
 
-    public void registerMechanic(Mechanic mechanic)
+    public void registerMechanic(final Mechanic mechanic)
     {
         mechanicList.add(mechanic);
     }

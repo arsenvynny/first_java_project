@@ -21,7 +21,7 @@ public class Mechanic
     public void makeBusy()
     {
         if (!status)
-            throw new IllegalArgumentException("Механік уже зайнятий");
+            throw new IllegalStateException("Механік уже зайнятий");
 
         status = false;
     }
@@ -29,7 +29,7 @@ public class Mechanic
     public void makeFree()
     {
         if (status)
-            throw new IllegalArgumentException("Механік уже зайнятий");
+            throw new IllegalStateException("Механік уже вільний");
 
         status = true;
     }
@@ -38,7 +38,7 @@ public class Mechanic
         return name;
     }
 
-    public boolean getStatus() {
+    public boolean isAvailable() {
         return status;
     }
 }
