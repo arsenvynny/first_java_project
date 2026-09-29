@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.List.copyOf;
+
 public class ServiceStorage {
 
     private List<Client> clientList = new ArrayList<>();
@@ -13,19 +15,19 @@ public class ServiceStorage {
     {}
 
     public List<Car> getCarList() {
-        return carList;
+        return new ArrayList<>(carList);
     }
 
     public List<Client> getClientList() {
-        return clientList;
+        return new ArrayList<>(clientList);
     }
 
     public List<Mechanic> getMechanicList() {
-        return mechanicList;
+        return new ArrayList<>(mechanicList);
     }
 
     public List<Order> getOrderList() {
-        return orderList;
+        return new ArrayList<>(orderList);
     }
 
     public void registerCar(final Car car)
@@ -59,6 +61,9 @@ public class ServiceStorage {
 
     public void registerMechanic(final Mechanic mechanic)
     {
+        if (mechanic == null)
+            throw new IllegalStateException("Немає механіка");
+
         for (Mechanic item : mechanicList)
         {
             if (item.equals(mechanic))
@@ -99,6 +104,9 @@ public class ServiceStorage {
 
     public List<Order> searchByMechanic (final Mechanic mechanic)
     {
+        if (mechanic == null)
+            throw new IllegalStateException("Механік відсутній");
+
         List<Order> orders = new ArrayList<>();
 
         for (Order item : orderList)

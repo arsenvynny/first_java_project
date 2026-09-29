@@ -1,21 +1,22 @@
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Event {
-    String description;
-    String time;
-    String type;
+    private String description;
+    private LocalDateTime time;
+    private EventType type;
 
-    public Event(String description, String time, String type)
+    public Event(String description, EventType type)
     {
-        if (description == null || time == null || type == null)
-            throw new IllegalArgumentException("Поля не можуть бути пустими");
+        if (description == null)
+            throw new IllegalArgumentException("Опис не може бути пустими");
 
         this.description = description;
-        this.time = time;
         this.type = type;
+        time = LocalDateTime.now();
     }
 
-    public String getType() {
+    public EventType getType() {
         return type;
     }
 
@@ -23,7 +24,7 @@ public class Event {
         return description;
     }
 
-    public String getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 

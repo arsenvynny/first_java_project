@@ -22,7 +22,7 @@ public class Order
     }
 
     public List<Work> getWork() {
-        return works;
+        return new ArrayList<>(works);
     }
 
     public OrderStatus getStatus() {
@@ -35,6 +35,14 @@ public class Order
 
     public Car getCar() {
         return car;
+    }
+
+    public List<Event> getEvents() {
+        return new ArrayList<>(events);
+    }
+
+    public Specialization getSpecialization() {
+        return specialization;
     }
 
     public void addWork(final Work work)
@@ -51,6 +59,9 @@ public class Order
 
         this.specialization = work.getSpecialization();
         this.works.add(work);
+        Event event = new Event("Додали роботу до замовлення", EventType.WORK_ADDED);
+
+        events.add(event);
     }
 
     public void assignMechanic(final Mechanic mechanic)
@@ -69,6 +80,10 @@ public class Order
 
         this.mechanic = mechanic;
         mechanic.makeBusy();
+
+        Event event = new Event("Назначено механіка", EventType.MECHANIC_ASSIGNED);
+
+        events.add(event);
     }
 
     public void diagnose()
@@ -77,6 +92,10 @@ public class Order
             throw new IllegalStateException("Провести діагностику можна тільки для новостворених замовлень");
 
         status = OrderStatus.DIAGNOSED;
+
+        Event event = new Event("Проведено діагностику", EventType.DIAGNOSED);
+
+        events.add(event);
     }
 
     public void approve()
@@ -88,6 +107,10 @@ public class Order
             throw new IllegalStateException("Відсутній список робіт");
 
         status = OrderStatus.APPROVED;
+
+        Event event = new Event("Замовлення підтверджено", EventType.APPROVED);
+
+        events.add(event);
     }
 
     public void makeInProgress()
@@ -99,6 +122,10 @@ public class Order
             throw new IllegalStateException("Механік відсутній");
 
         status = OrderStatus.IN_PROGRESS;
+
+        Event event = new Event("Розпочалися роботи", EventType.START);
+
+        events.add(event);
     }
 
     public void complete()
@@ -114,6 +141,10 @@ public class Order
 
         mechanic.makeFree();
         status = OrderStatus.COMPLETED;
+
+        Event event = new Event("Замовлення виконано", EventType.COMPLETED);
+
+        events.add(event);
     }
 
     public void cancel()
@@ -125,6 +156,10 @@ public class Order
 
         if (mechanic != null)
             mechanic.makeFree();
+
+        Event event = new Event("Замовлення скасовано", EventType.CANCELLED);
+
+        events.add(event);
     }
 
     public Priority getPriority() {
@@ -158,17 +193,5 @@ public class Order
         return totalPrice;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return  Objects.equals(getCar(), order.getCar()) &&
-                Objects.equals(works, order.works) &&
-                Objects.equals(getMechanic(), order.getMechanic());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getCar(), works, getMechanic());
-    }
 }
