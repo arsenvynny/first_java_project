@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Mechanic
 {
     private String name;
@@ -40,5 +42,19 @@ public class Mechanic
 
     public boolean isAvailable() {
         return status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Mechanic mechanic = (Mechanic) o;
+        return status == mechanic.status &&
+                Objects.equals(getName(), mechanic.getName()) &&
+                getSpecialization() == mechanic.getSpecialization();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), status, getSpecialization());
     }
 }

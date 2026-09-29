@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Car
 {
     private  String model;
@@ -39,5 +41,21 @@ public class Car
         this.model = model;
         this.mark = mark;
         this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return getYear() == car.getYear() &&
+                Objects.equals(getModel(), car.getModel()) &&
+                Objects.equals(getMark(), car.getMark()) &&
+                Objects.equals(getOwner(), car.getOwner()) &&
+                Objects.equals(getVinCode(), car.getVinCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getModel(), getMark(), getYear(), getOwner(), getVinCode());
     }
 }

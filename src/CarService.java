@@ -18,7 +18,7 @@ public class CarService {
     public void registerCar(final Car car)
     {
         for(Car value : carList)
-            if (Objects.equals(value.getVinCode(), car.getVinCode()))
+            if (value.equals(car))
                 throw new IllegalStateException("Це авто уже зареєстроване у сервісі");
 
         carList.add(car);

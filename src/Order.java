@@ -1,6 +1,7 @@
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Order
 {
@@ -8,10 +9,13 @@ public class Order
     private Car car;
     private List<Work> works = new ArrayList<>();
     private Mechanic mechanic;
+    private Priority priority;
+    private Specialization specialization;
 
-    public Order(Car car)
+    public Order(Car car, Priority priority)
     {
         this.car = car;
+        this.priority = priority;
 
         status = OrderStatus.CREATED;
     }
@@ -37,6 +41,14 @@ public class Order
         if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
             throw new IllegalStateException("Роботу не можна додати до виконаного або скасованого замовлення");
 
+        if (!works.isEmpty())
+        {
+            for (Work item : works)
+                if (item.getSpecialization() == work.getSpecialization())
+                    throw  new IllegalStateException("Ця робота не підходить за спеціалізацією");
+        }
+
+        this.specialization = work.getSpecialization();
         this.works.add(work);
     }
 
@@ -50,6 +62,9 @@ public class Order
 
         if (!mechanic.isAvailable())
             throw new IllegalStateException("Механік зайнятий");
+
+        if (mechanic.getSpecialization() != specialization)
+            throw new IllegalStateException("У механіка невідповідна спеціалізація");
 
         this.mechanic = mechanic;
         mechanic.makeBusy();
@@ -68,7 +83,7 @@ public class Order
         if (status != OrderStatus.DIAGNOSED)
             throw new IllegalStateException("Погодити можна тільки після проведення діагностики");
 
-        if (works == null)
+        if (works.isEmpty())
             throw new IllegalStateException("Відсутній список робіт");
 
         status = OrderStatus.APPROVED;
@@ -90,6 +105,12 @@ public class Order
         if (status != OrderStatus.IN_PROGRESS)
             throw new IllegalStateException("Закінчити можна тільки ті замовлення, які почали виконуватись");
 
+        for (Work item : works)
+        {
+            if (!item.isCompleted())
+                throw new IllegalStateException("Ще не вся робота виконана");
+        }
+
         mechanic.makeFree();
         status = OrderStatus.COMPLETED;
     }
@@ -105,21 +126,28 @@ public class Order
             mechanic.makeFree();
     }
 
+    public Priority getPriority() {
+        return priority;
+    }
+
     public BigDecimal calculateWorkPrice()
     {
-        BigDecimal totalPrice = new BigDecimal("0");
+        BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (Work item : works)
         {
             totalPrice = totalPrice.add(item.getWorkCost());
         }
 
+        if (priority == Priority.URGED)
+            totalPrice = totalPrice.add(totalPrice.multiply(CONSTANS.URGED.FEE));
+
         return totalPrice;
     }
 
     public BigDecimal calculatePartsPrice()
     {
-        BigDecimal totalPrice = new BigDecimal("0");
+        BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (Work item : works)
         {
@@ -127,5 +155,20 @@ public class Order
         }
 
         return totalPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return getStatus() == order.getStatus() &&
+                Objects.equals(getCar(), order.getCar()) &&
+                Objects.equals(works, order.works) &&
+                Objects.equals(getMechanic(), order.getMechanic());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStatus(), getCar(), works, getMechanic());
     }
 }

@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Work
 {
@@ -6,9 +7,10 @@ public class Work
     private boolean isCompleted;
     private BigDecimal workCost;
     private BigDecimal autoPartsCost;
+    private Specialization specialization;
 
 
-    public Work(String description, String workCost, String autoPartsCost)
+    public Work(String description, String workCost, String autoPartsCost, Specialization specialization)
     {
         if (description == null)
             throw new IllegalArgumentException("Опис не може бути порожнім");
@@ -26,13 +28,35 @@ public class Work
         this.workCost = new BigDecimal(workCost);
         this.description = description;
         isCompleted = false;
+        this.specialization = specialization;
     }
 
     public void makeDone()
     {
+        if (isCompleted)
+            throw new IllegalStateException("Ця робота вже виконана");
+
         isCompleted = true;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Work work = (Work) o;
+        return isCompleted == work.isCompleted &&
+                Objects.equals(description, work.description) &&
+                Objects.equals(workCost, work.workCost) &&
+                Objects.equals(autoPartsCost, work.autoPartsCost);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, isCompleted, workCost, autoPartsCost);
+    }
+
+    public Specialization getSpecialization() {
+        return specialization;
+    }
 
     public BigDecimal getWorkCost() { return workCost; }
 

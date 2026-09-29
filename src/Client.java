@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Client
 {
     private String name;
@@ -13,6 +15,18 @@ public class Client
 
         this.name = name;
         this.surName = sureName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return Objects.equals(getName(), client.getName()) && Objects.equals(surName, client.surName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), surName);
     }
 
     public String getName() {
