@@ -1,12 +1,11 @@
 import java.util.Objects;
 
-public class Car
-{
-    private  String model;
-    private  String mark;
-    private  int year;
-    private  Client owner;
-    private  String vinCode;
+public class Car {
+    private String model;
+    private String mark;
+    private int year;
+    private Client owner;
+    private String vinCode;
 
     public String getVinCode() {
         return vinCode;
@@ -28,8 +27,7 @@ public class Car
         return model;
     }
 
-    public Car(String mark, String model, int year, Client owner, String vinCode)
-    {
+    public Car(String mark, String model, int year, Client owner, String vinCode) {
         if (vinCode == null || vinCode.isEmpty())
             throw new IllegalArgumentException("Недостовірний VinCode");
 

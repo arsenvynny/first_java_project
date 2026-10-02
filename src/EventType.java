@@ -1,11 +1,10 @@
 public enum EventType {
-        CREATED,
-        DIAGNOSED,
+        CREATED_ORDER,
+        DIAGNOSED_COMPLETED,
         WORK_ADDED,
-        APPROVED,
+        APPROVED_ORDER,
         MECHANIC_ASSIGNED,
-        START,
-        IN_PROGRESS,
-        COMPLETED,
-        CANCELLED;
+        START_WORKS,
+        COMPLETED_ALL_WORKS,
+        CANCELLED_ORDER;
 }

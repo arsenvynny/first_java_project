@@ -27,7 +27,6 @@ public class Work
         this.autoPartsCost = new BigDecimal(autoPartsCost);
         this.workCost = new BigDecimal(workCost);
         this.description = description;
-        isCompleted = false;
         this.specialization = specialization;
     }
 

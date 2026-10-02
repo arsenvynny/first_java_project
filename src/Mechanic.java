@@ -1,18 +1,15 @@
 import java.util.Objects;
 
-public class Mechanic
-{
+public class Mechanic {
     private String name;
-    private boolean status;
+    private boolean status = true;
     private Specialization specialization;
 
-    public Mechanic(String name, Specialization specialization)
-    {
+    public Mechanic(String name, Specialization specialization) {
         if (name == null)
             throw new IllegalArgumentException("Ім'я не може бути пустим");
 
         this.name = name;
-        status = true;
         this.specialization = specialization;
     }
 
@@ -20,16 +17,14 @@ public class Mechanic
         return specialization;
     }
 
-    public void makeBusy()
-    {
+    public void makeBusy() {
         if (!status)
             throw new IllegalStateException("Механік уже зайнятий");
 
         status = false;
     }
 
-    public void makeFree()
-    {
+    public void makeFree() {
         if (status)
             throw new IllegalStateException("Механік уже вільний");
 
@@ -48,7 +43,7 @@ public class Mechanic
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Mechanic mechanic = (Mechanic) o;
-        return  Objects.equals(getName(), mechanic.getName()) &&
+        return Objects.equals(getName(), mechanic.getName()) &&
                 getSpecialization() == mechanic.getSpecialization();
     }
 

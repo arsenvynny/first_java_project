@@ -3,8 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Order
-{
+public class Order {
     private OrderStatus status;
     private Car car;
     private List<Work> works = new ArrayList<>();
@@ -13,12 +12,15 @@ public class Order
     private Specialization specialization;
     private List<Event> events = new ArrayList<>();
 
-    public Order(Car car, Priority priority)
-    {
+    public Order(Car car, Priority priority) {
         this.car = car;
         this.priority = priority;
 
         status = OrderStatus.CREATED;
+
+        Event event = new Event("Замовлення створено", EventType.CREATED_ORDER);
+
+        events.add(event);
     }
 
     public List<Work> getWork() {
@@ -45,16 +47,14 @@ public class Order
         return specialization;
     }
 
-    public void addWork(final Work work)
-    {
+    public void addWork(final Work work) {
         if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
             throw new IllegalStateException("Роботу не можна додати до виконаного або скасованого замовлення");
 
-        if (!works.isEmpty())
-        {
+        if (!works.isEmpty()) {
             for (Work item : works)
                 if (item.getSpecialization() != work.getSpecialization())
-                    throw  new IllegalStateException("Ця робота не підходить за спеціалізацією");
+                    throw new IllegalStateException("Ця робота не підходить за спеціалізацією");
         }
 
         this.specialization = work.getSpecialization();
@@ -64,10 +64,9 @@ public class Order
         events.add(event);
     }
 
-    public void assignMechanic(final Mechanic mechanic)
-    {
+    public void assignMechanic(final Mechanic mechanic) {
         if (status == OrderStatus.CANCELLED || status == OrderStatus.COMPLETED)
-          throw new IllegalStateException("Механіка не можна назначати на скасоване або закінчене замовлення");
+            throw new IllegalStateException("Механіка не можна назначати на скасоване або закінчене замовлення");
 
         if (mechanic == null)
             throw new IllegalStateException("Немає механіка");
@@ -86,20 +85,18 @@ public class Order
         events.add(event);
     }
 
-    public void diagnose()
-    {
+    public void diagnose() {
         if (status != OrderStatus.CREATED)
             throw new IllegalStateException("Провести діагностику можна тільки для новостворених замовлень");
 
         status = OrderStatus.DIAGNOSED;
 
-        Event event = new Event("Проведено діагностику", EventType.DIAGNOSED);
+        Event event = new Event("Проведено діагностику", EventType.DIAGNOSED_COMPLETED);
 
         events.add(event);
     }
 
-    public void approve()
-    {
+    public void approve() {
         if (status != OrderStatus.DIAGNOSED)
             throw new IllegalStateException("Погодити можна тільки після проведення діагностики");
 
@@ -108,13 +105,12 @@ public class Order
 
         status = OrderStatus.APPROVED;
 
-        Event event = new Event("Замовлення підтверджено", EventType.APPROVED);
+        Event event = new Event("Замовлення підтверджено", EventType.APPROVED_ORDER);
 
         events.add(event);
     }
 
-    public void makeInProgress()
-    {
+    public void makeInProgress() {
         if (status != OrderStatus.APPROVED)
             throw new IllegalStateException("До виконання приступають тільки погоджені замовлення");
 
@@ -123,18 +119,16 @@ public class Order
 
         status = OrderStatus.IN_PROGRESS;
 
-        Event event = new Event("Розпочалися роботи", EventType.START);
+        Event event = new Event("Розпочалися роботи", EventType.START_WORKS);
 
         events.add(event);
     }
 
-    public void complete()
-    {
+    public void complete() {
         if (status != OrderStatus.IN_PROGRESS)
             throw new IllegalStateException("Закінчити можна тільки ті замовлення, які почали виконуватись");
 
-        for (Work item : works)
-        {
+        for (Work item : works) {
             if (!item.isCompleted())
                 throw new IllegalStateException("Ще не вся робота виконана");
         }
@@ -142,13 +136,12 @@ public class Order
         mechanic.makeFree();
         status = OrderStatus.COMPLETED;
 
-        Event event = new Event("Замовлення виконано", EventType.COMPLETED);
+        Event event = new Event("Замовлення виконано", EventType.COMPLETED_ALL_WORKS);
 
         events.add(event);
     }
 
-    public void cancel()
-    {
+    public void cancel() {
         if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
             throw new IllegalStateException("Це замовлення не може бути скасованим");
 
@@ -157,7 +150,7 @@ public class Order
         if (mechanic != null)
             mechanic.makeFree();
 
-        Event event = new Event("Замовлення скасовано", EventType.CANCELLED);
+        Event event = new Event("Замовлення скасовано", EventType.CANCELLED_ORDER);
 
         events.add(event);
     }
@@ -166,12 +159,10 @@ public class Order
         return priority;
     }
 
-    public BigDecimal calculateWorkPrice()
-    {
+    public BigDecimal calculateWorkPrice() {
         BigDecimal totalPrice = BigDecimal.ZERO;
 
-        for (Work item : works)
-        {
+        for (Work item : works) {
             totalPrice = totalPrice.add(item.getWorkCost());
         }
 
@@ -181,12 +172,10 @@ public class Order
         return totalPrice;
     }
 
-    public BigDecimal calculatePartsPrice()
-    {
+    public BigDecimal calculatePartsPrice() {
         BigDecimal totalPrice = BigDecimal.ZERO;
 
-        for (Work item : works)
-        {
+        for (Work item : works) {
             totalPrice = totalPrice.add(item.getAutoPartsCost());
         }
 
