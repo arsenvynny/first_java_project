@@ -1,8 +1,10 @@
+package domain;
+
 import java.math.BigDecimal;
 
-public class CONSTANTS {
+public class constants {
 
-    private CONSTANTS() {}
+    private constants() {}
 
     static public class URGENT{
         static final public BigDecimal FEE = new BigDecimal("0.2");

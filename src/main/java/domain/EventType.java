@@ -1,3 +1,5 @@
+package domain;
+
 public enum EventType {
         CREATED_ORDER,
         DIAGNOSED_COMPLETED,

@@ -1,7 +1,8 @@
+package domain;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Order {
     private OrderStatus status;
@@ -167,7 +168,7 @@ public class Order {
         }
 
         if (priority == Priority.URGED)
-            totalPrice = totalPrice.add(totalPrice.multiply(CONSTANTS.URGENT.FEE));
+            totalPrice = totalPrice.add(totalPrice.multiply(constants.URGENT.FEE));
 
         return totalPrice;
     }
