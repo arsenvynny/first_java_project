@@ -10,8 +10,8 @@ public class Order {
     private List<Work> works = new ArrayList<>();
     private Mechanic mechanic;
     private Priority priority;
-    private Specialization specialization;
     private List<Event> events = new ArrayList<>();
+    private Long ID;
 
     public Order(Car car, Priority priority) {
         this.car = car;
@@ -23,6 +23,8 @@ public class Order {
 
         events.add(event);
     }
+
+    public Long getID() {return ID;}
 
     public List<Work> getWork() {
         return new ArrayList<>(works);
@@ -44,21 +46,14 @@ public class Order {
         return new ArrayList<>(events);
     }
 
-    public Specialization getSpecialization() {
-        return specialization;
-    }
-
     public void addWork(final Work work) {
         if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
             throw new IllegalStateException("Роботу не можна додати до виконаного або скасованого замовлення");
 
-        if (!works.isEmpty()) {
-            for (Work item : works)
-                if (item.getSpecialization() != work.getSpecialization())
-                    throw new IllegalStateException("Ця робота не підходить за спеціалізацією");
+        if (work == null) {
+            throw new IllegalStateException("Не вказана робота");
         }
 
-        this.specialization = work.getSpecialization();
         this.works.add(work);
         Event event = new Event("Додали роботу до замовлення", EventType.WORK_ADDED);
 
@@ -75,8 +70,13 @@ public class Order {
         if (!mechanic.isAvailable())
             throw new IllegalStateException("Механік зайнятий");
 
-        if (mechanic.getSpecialization() != specialization)
-            throw new IllegalStateException("У механіка невідповідна спеціалізація");
+        for (Specialization specializationMechanic : mechanic.getSpecializationList()){
+            for (Work work : works){
+                if (specializationMechanic != work.getSpecialization()){
+                    throw  new IllegalStateException("Механік не сумісний за спеціальністю");
+                }
+            }
+        }
 
         this.mechanic = mechanic;
         mechanic.makeBusy();
@@ -168,7 +168,7 @@ public class Order {
         }
 
         if (priority == Priority.URGED)
-            totalPrice = totalPrice.add(totalPrice.multiply(constants.URGENT.FEE));
+            totalPrice = totalPrice.add(totalPrice.multiply(Constants.urgent.FEE));
 
         return totalPrice;
     }

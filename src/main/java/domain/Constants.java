@@ -2,11 +2,11 @@ package domain;
 
 import java.math.BigDecimal;
 
-public class constants {
+public class Constants {
 
-    private constants() {}
+    private Constants() {}
 
-    static public class URGENT{
+    static public class urgent{
         static final public BigDecimal FEE = new BigDecimal("0.2");
     }
 }

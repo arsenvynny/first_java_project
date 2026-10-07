@@ -1,22 +1,29 @@
 package domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Mechanic {
     private String name;
     private boolean status = true;
-    private Specialization specialization;
+    private List<Specialization> specializationList = new ArrayList<>();
 
-    public Mechanic(String name, Specialization specialization) {
+    public Mechanic(String name, List<Specialization> specializationList ) {
         if (name == null)
             throw new IllegalArgumentException("Ім'я не може бути пустим");
 
+        if (specializationList.isEmpty()){
+            throw new IllegalStateException("Не вказані спеціалізації для механіка");
+        }
+
         this.name = name;
-        this.specialization = specialization;
+        this.specializationList = specializationList;
+
     }
 
-    public Specialization getSpecialization() {
-        return specialization;
+    public List<Specialization> getSpecializationList() {
+        return new ArrayList<>(specializationList);
     }
 
     public void makeBusy() {
