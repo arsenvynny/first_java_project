@@ -24,6 +24,8 @@ public class Order {
         events.add(event);
     }
 
+    public void setID(long ID) {this.ID = ID;}
+
     public Long getID() {return ID;}
 
     public List<Work> getWork() {
@@ -168,7 +170,7 @@ public class Order {
         }
 
         if (priority == Priority.URGED)
-            totalPrice = totalPrice.add(totalPrice.multiply(Constants.urgent.FEE));
+            totalPrice = totalPrice.add(totalPrice.multiply(Constants.Urgent.FEE));
 
         return totalPrice;
     }

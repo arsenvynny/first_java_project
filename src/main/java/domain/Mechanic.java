@@ -52,12 +52,12 @@ public class Mechanic {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Mechanic mechanic = (Mechanic) o;
-        return Objects.equals(getName(), mechanic.getName()) &&
-                getSpecialization() == mechanic.getSpecialization();
+        return  Objects.equals(getName(), mechanic.getName()) &&
+                Objects.equals(getSpecializationList(), mechanic.getSpecializationList());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getSpecialization());
+        return Objects.hash(getName(), getSpecializationList());
     }
 }

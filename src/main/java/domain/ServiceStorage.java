@@ -45,7 +45,7 @@ public class ServiceStorage {
             for (Car value : carList) {
                 if (value.equals(car))
                     throw new IllegalStateException("Це авто уже зареєстроване у сервісі");
-            }
+             }
         }
 
         carList.add(car);
