@@ -59,8 +59,8 @@ public class RepairOrder {
     }
 
     public void addWork(final Work work) {
-        if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
-            throw new IllegalStateException("Роботу не можна додати до виконаного або скасованого замовлення");
+        if (status != OrderStatus.DIAGNOSED)
+            throw new IllegalStateException("До цього замовлення не можна додати роботу");
 
         if (work == null) {
             throw new IllegalStateException("Не вказана робота");
@@ -73,8 +73,8 @@ public class RepairOrder {
     }
 
     public void assignMechanic(final Mechanic mechanic) {
-        if (status == OrderStatus.CANCELLED || status == OrderStatus.COMPLETED)
-            throw new IllegalStateException("Механіка не можна назначати на скасоване або закінчене замовлення");
+        if (status != OrderStatus.APPROVED)
+            throw new IllegalStateException("На це замовлення не можна назначити механіка");
 
         if (mechanic == null)
             throw new IllegalStateException("Немає механіка");
@@ -82,19 +82,10 @@ public class RepairOrder {
         if (!mechanic.isAvailable())
             throw new IllegalStateException("Механік зайнятий");
 
-        int workCount = works.size();
-
-        for (Specialization specializationMechanic : mechanic.getSpecializationList()){
-            for (Work work : works){
-                if (specializationMechanic == work.getSpecialization()){
-                    workCount -= 1;
-
-                }
+        for (Work work : works){
+            if (!mechanic.canPerfomance(work)){
+                throw new IllegalStateException("У механіка немає суміжної спеціальності");
             }
-        }
-
-        if (workCount != 0){
-            throw new IllegalStateException(" У механіка не достатньо суміжних спеціальностей");
         }
 
         this.mechanic = mechanic;

@@ -40,6 +40,16 @@ public class Mechanic {
         status = true;
     }
 
+    public boolean canPerfomance(Work work){
+
+        for (Specialization specialization : specializationList){
+            if (work.getSpecialization() == specialization){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getName() {
         return name;
     }
