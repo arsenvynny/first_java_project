@@ -11,11 +11,13 @@ import java.util.List;
 
 
 public class OrderTest {
-    private Order order;
+    private RepairOrder order;
 
     @BeforeEach
     void setOrder(){
-        order = new Order();
+        Client client = new Client("Arsen", "Vynnytskyi");
+        Car car = new Car("Mazda", "RX-7", 2026, client, "BC0000KA");
+        order = new RepairOrder(car, Priority.NORMAL);
 
         Work work1 = new Work("tttt", "100", "200", Specialization.ELECTRICIAN);
         Work work2 = new Work("tttt", "100", "200", Specialization.ELECTRICIAN);

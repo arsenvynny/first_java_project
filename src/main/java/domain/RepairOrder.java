@@ -1,10 +1,11 @@
 package domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Order {
+public class RepairOrder {
     private OrderStatus status;
     private Car car;
     private List<Work> works = new ArrayList<>();
@@ -13,7 +14,7 @@ public class Order {
     private List<Event> events = new ArrayList<>();
     private String id;
 
-    public Order(Car car, Priority priority) {
+    public RepairOrder(Car car, Priority priority) {
         this.car = car;
         this.priority = priority;
 
@@ -23,11 +24,6 @@ public class Order {
 
         events.add(event);
     }
-
-    public Order() {
-
-    }
-
 
     public void assignId(String ID) {
         if (id != null){
@@ -56,6 +52,10 @@ public class Order {
 
     public List<Event> getEvents() {
         return new ArrayList<>(events);
+    }
+
+    public Priority getPriority() {
+        return priority;
     }
 
     public void addWork(final Work work) {
@@ -175,15 +175,36 @@ public class Order {
         events.add(event);
     }
 
-    public Priority getPriority() {
-        return priority;
+    public BigDecimal getWorkPrice(){
+
+        BigDecimal totalWorkPrice = BigDecimal.ZERO;
+
+        for (Work work : works){
+            totalWorkPrice = totalWorkPrice.add(work.getWorkCost());
+        }
+
+        return totalWorkPrice;
     }
 
+    public BigDecimal getPartsPrice(){
+
+        BigDecimal totalWorkPrice = BigDecimal.ZERO;
+
+        for (Work work : works){
+            totalWorkPrice = totalWorkPrice.add(work.getAutoPartsCost());
+        }
+
+        return totalWorkPrice;
+    }
+
+    public BigDecimal getTotalOrderPrice(){
+        return getPartsPrice().add(getWorkPrice());
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
+        RepairOrder order = (RepairOrder) o;
         return  Objects.equals(getCar(), order.getCar()) &&
                 Objects.equals(works, order.works) &&
                 Objects.equals(getMechanic(), order.getMechanic()) &&
@@ -194,6 +215,6 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStatus(), getCar(), works, getMechanic(), getPriority(), getEvents(), getID());
+        return Objects.hash(getCar(), works, getMechanic(), getPriority(), getEvents(), getID());
     }
 }

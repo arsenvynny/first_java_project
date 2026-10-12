@@ -1,10 +1,10 @@
 package repository;
 
-import domain.Order;
+import domain.RepairOrder;
 
 import java.util.Optional;
 
 public interface RepairOrderRepository {
-    public void save(final Order order);
-    public Optional<Order> findByID(final String ID);
+    public void save(final RepairOrder order);
+    public Optional<RepairOrder> findByID(final String ID);
 }

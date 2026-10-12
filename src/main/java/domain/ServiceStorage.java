@@ -11,7 +11,7 @@ public class ServiceStorage {
     private List<Client> clientList = new ArrayList<>();
     private List<Car> carList = new ArrayList<>();
     private List<Mechanic> mechanicList = new ArrayList<>();
-    private List<Order> orderList = new ArrayList<>();
+    private List<RepairOrder> orderList = new ArrayList<>();
 
     private ServiceStorage() {
     }
@@ -36,7 +36,7 @@ public class ServiceStorage {
         return new ArrayList<>(mechanicList);
     }
 
-    public List<Order> getOrderList() {
+    public List<RepairOrder> getOrderList() {
         return new ArrayList<>(orderList);
     }
 
@@ -52,9 +52,9 @@ public class ServiceStorage {
     }
 
 
-    public void registerOrder(final Order order) {
+    public void registerOrder(final RepairOrder order) {
         if (!orderList.isEmpty()) {
-            for (Order item : orderList) {
+            for (RepairOrder item : orderList) {
                 if (item.equals(order))
                     throw new IllegalStateException("Це замовлення вже записане у сховище");
             }
@@ -83,10 +83,10 @@ public class ServiceStorage {
         mechanicList.add(mechanic);
     }
 
-    public List<Order> searchByCar(final Car car) {
-        List<Order> orders = new ArrayList<>();
+    public List<RepairOrder> searchByCar(final Car car) {
+        List<RepairOrder> orders = new ArrayList<>();
 
-        for (Order item : orderList) {
+        for (RepairOrder item : orderList) {
             if (item.getCar().equals(car)) {
                 orders.add(item);
             }
@@ -95,10 +95,10 @@ public class ServiceStorage {
         return orders;
     }
 
-    public List<Order> searchByStatus(final OrderStatus status) {
-        List<Order> orders = new ArrayList<>();
+    public List<RepairOrder> searchByStatus(final OrderStatus status) {
+        List<RepairOrder> orders = new ArrayList<>();
 
-        for (Order item : orderList) {
+        for (RepairOrder item : orderList) {
             if (item.getStatus().equals(status)) {
                 orders.add(item);
             }
@@ -107,10 +107,10 @@ public class ServiceStorage {
         return orders;
     }
 
-    public List<Order> searchByMechanic(final Mechanic mechanic) {
-        List<Order> orders = new ArrayList<>();
+    public List<RepairOrder> searchByMechanic(final Mechanic mechanic) {
+        List<RepairOrder> orders = new ArrayList<>();
 
-        for (Order item : orderList) {
+        for (RepairOrder item : orderList) {
             if (Objects.equals(item.getMechanic(), mechanic)) {
                 orders.add(item);
             }

@@ -1,15 +1,15 @@
 package repository;
 
-import domain.Order;
+import domain.RepairOrder;
 
 import java.util.*;
 
 public class InMemoryRepairOrderRepository
         implements RepairOrderRepository {
-    private Map<String, Order> orders = new HashMap<>();
+    private Map<String, RepairOrder> orders = new HashMap<>();
 
     @Override
-    public void save(final Order newOrder) {
+    public void save(final RepairOrder newOrder) {
 
         if (newOrder.getID() != null) {
             orders.put(newOrder.getID(), newOrder);
@@ -22,7 +22,7 @@ public class InMemoryRepairOrderRepository
     }
 
     @Override
-    public Optional<Order> findByID(final String ID) {
+    public Optional<RepairOrder> findByID(final String ID) {
         return Optional.ofNullable(orders.get(ID));
     }
 
