@@ -1,10 +1,8 @@
 package domain;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Order {
     private OrderStatus status;
@@ -13,7 +11,7 @@ public class Order {
     private Mechanic mechanic;
     private Priority priority;
     private List<Event> events = new ArrayList<>();
-    private String ID;
+    private String id;
 
     public Order(Car car, Priority priority) {
         this.car = car;
@@ -26,9 +24,19 @@ public class Order {
         events.add(event);
     }
 
-    public void setID(String ID) {this.ID = ID;}
+    public Order() {
 
-    public String getID() {return ID;}
+    }
+
+
+    public void assignId(String ID) {
+        if (id != null){
+            throw new IllegalStateException("id вже встановлено");
+        }
+        this.id = ID;
+    }
+
+    public String getID() {return id;}
 
     public List<Work> getWork() {
         return new ArrayList<>(works);
@@ -74,23 +82,27 @@ public class Order {
         if (!mechanic.isAvailable())
             throw new IllegalStateException("Механік зайнятий");
 
+        int workCount = works.size();
+
         for (Specialization specializationMechanic : mechanic.getSpecializationList()){
             for (Work work : works){
                 if (specializationMechanic == work.getSpecialization()){
+                    workCount -= 1;
 
-                    this.mechanic = mechanic;
-                    mechanic.makeBusy();
-
-                    Event event = new Event("Назначено механіка", EventType.MECHANIC_ASSIGNED);
-
-                    events.add(event);
                 }
             }
         }
 
-        if(this.mechanic == null){
-            throw new IllegalStateException("У механіка немає відповідної спеціальності");
+        if (workCount != 0){
+            throw new IllegalStateException(" У механіка не достатньо суміжних спеціальностей");
         }
+
+        this.mechanic = mechanic;
+        mechanic.makeBusy();
+
+        Event event = new Event("Назначено механіка", EventType.MECHANIC_ASSIGNED);
+
+        events.add(event);
     }
 
     public void diagnose() {
@@ -167,28 +179,6 @@ public class Order {
         return priority;
     }
 
-    public BigDecimal calculateWorkPrice() {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-
-        for (Work item : works) {
-            totalPrice = totalPrice.add(item.getWorkCost());
-        }
-
-        if (priority == Priority.URGED)
-            totalPrice = totalPrice.add(totalPrice.multiply(Constants.Urgent.FEE));
-
-        return totalPrice;
-    }
-
-    public BigDecimal calculatePartsPrice() {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-
-        for (Work item : works) {
-            totalPrice = totalPrice.add(item.getAutoPartsCost());
-        }
-
-        return totalPrice;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,24 +1,21 @@
 package repository;
 
-import domain.Constants;
 import domain.Order;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryRepairOrderRepository
         implements RepairOrderRepository {
-    private UUID id;
     private Map<String, Order> orders = new HashMap<>();
 
     @Override
     public void save(final Order newOrder) {
 
         if (newOrder.getID() != null) {
-            orders.replace(newOrder.getID(), orders.get(newOrder.getID()), newOrder);
+            orders.put(newOrder.getID(), newOrder);
         } else {
 
-            newOrder.setID(UUID.randomUUID().toString());
+            newOrder.assignId(UUID.randomUUID().toString());
 
             orders.put(newOrder.getID(), newOrder);
         }

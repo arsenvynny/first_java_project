@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Work
 {
     private String description;
-    private boolean isCompleted;
+    private boolean isCompleted = false;
     private BigDecimal workCost;
     private BigDecimal autoPartsCost;
     private Specialization specialization;
