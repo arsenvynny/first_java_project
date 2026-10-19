@@ -15,16 +15,16 @@ public class Work
     public Work(String description, String workCost, String autoPartsCost, Specialization specialization)
     {
         if (description == null)
-            throw new IllegalArgumentException("Опис не може бути порожнім");
+            throw new IllegalArgumentException("The work description cannot be null");
 
         if (workCost == null || autoPartsCost == null)
-            throw new IllegalArgumentException("Ціни не можуть бути пустими");
+            throw new IllegalArgumentException("Work and parts costs cannot be null");
 
         if (new BigDecimal(workCost).compareTo(BigDecimal.ZERO) < 0 )
-            throw new IllegalArgumentException("Ціна не може бути від'ємною");
+            throw new IllegalArgumentException("The cost cannot be negative");
 
         if (new BigDecimal(autoPartsCost).compareTo(BigDecimal.ZERO) < 0 )
-            throw new IllegalArgumentException("Ціна не може бути від'ємною");
+            throw new IllegalArgumentException("The cost cannot be negative");
 
         this.autoPartsCost = new BigDecimal(autoPartsCost);
         this.workCost = new BigDecimal(workCost);
@@ -35,7 +35,7 @@ public class Work
     public void makeDone()
     {
         if (isCompleted)
-            throw new IllegalStateException("Ця робота вже виконана");
+            throw new IllegalStateException("This work item has already been completed");
 
         isCompleted = true;
     }

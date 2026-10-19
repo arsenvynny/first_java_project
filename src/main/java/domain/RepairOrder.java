@@ -6,33 +6,28 @@ import java.util.List;
 import java.util.Objects;
 
 public class RepairOrder {
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.CREATED;;
     private Car car;
     private List<Work> works = new ArrayList<>();
     private Mechanic mechanic;
     private Priority priority;
     private List<Event> events = new ArrayList<>();
-    private String id;
+    private Long id;
 
     public RepairOrder(Car car, Priority priority) {
         this.car = car;
         this.priority = priority;
 
-        status = OrderStatus.CREATED;
-
-        Event event = new Event("Замовлення створено", EventType.CREATED_ORDER);
+        Event event = new Event("Repair order created", EventType.CREATED_ORDER);
 
         events.add(event);
     }
 
-    public void assignId(String ID) {
-        if (id != null){
-            throw new IllegalStateException("id вже встановлено");
-        }
-        this.id = ID;
+    public void setId(Long Id) {
+        this.id = Id;
     }
 
-    public String getID() {return id;}
+    public Long getID() {return id;}
 
     public List<Work> getWork() {
         return new ArrayList<>(works);
@@ -60,108 +55,110 @@ public class RepairOrder {
 
     public void addWork(final Work work) {
         if (status != OrderStatus.DIAGNOSED)
-            throw new IllegalStateException("До цього замовлення не можна додати роботу");
+            throw new IllegalStateException("Work cannot be added to this order in its current status");
 
         if (work == null) {
-            throw new IllegalStateException("Не вказана робота");
+            throw new IllegalStateException("Work must be specified");
         }
 
         this.works.add(work);
-        Event event = new Event("Додали роботу до замовлення", EventType.WORK_ADDED);
+        Event event = new Event("Work added to repair order", EventType.WORK_ADDED);
 
         events.add(event);
     }
 
     public void assignMechanic(final Mechanic mechanic) {
         if (status != OrderStatus.APPROVED)
-            throw new IllegalStateException("На це замовлення не можна назначити механіка");
+            throw new IllegalStateException("A mechanic can only be assigned to an approved order");
 
         if (mechanic == null)
-            throw new IllegalStateException("Немає механіка");
+            throw new IllegalStateException("A mechanic must be specified");
+
+        if (this.mechanic != null){
+            throw new IllegalStateException("A mechanic has already been assigned");
+        }
 
         if (!mechanic.isAvailable())
-            throw new IllegalStateException("Механік зайнятий");
+            throw new IllegalStateException("The mechanic is busy");
 
         for (Work work : works){
-            if (!mechanic.canPerfomance(work)){
-                throw new IllegalStateException("У механіка немає суміжної спеціальності");
+            if (!mechanic.canPerform(work)){
+                throw new IllegalStateException("The mechanic does not have the required specialization");
             }
         }
 
         this.mechanic = mechanic;
         mechanic.makeBusy();
 
-        Event event = new Event("Назначено механіка", EventType.MECHANIC_ASSIGNED);
+        Event event = new Event("Mechanic assigned", EventType.MECHANIC_ASSIGNED);
 
         events.add(event);
     }
 
     public void diagnose() {
         if (status != OrderStatus.CREATED)
-            throw new IllegalStateException("Провести діагностику можна тільки для новостворених замовлень");
+            throw new IllegalStateException("Diagnosis can only be performed on newly created orders");
 
         status = OrderStatus.DIAGNOSED;
 
-        Event event = new Event("Проведено діагностику", EventType.DIAGNOSED_COMPLETED);
+        Event event = new Event("Diagnosis completed", EventType.DIAGNOSED_COMPLETED);
 
         events.add(event);
     }
 
     public void approve() {
-        if (status != OrderStatus.DIAGNOSED)
-            throw new IllegalStateException("Погодити можна тільки після проведення діагностики");
 
         if (works.isEmpty())
-            throw new IllegalStateException("Відсутній список робіт");
+            throw new IllegalStateException("At least one work item is required for approval");
 
         status = OrderStatus.APPROVED;
 
-        Event event = new Event("Замовлення підтверджено", EventType.APPROVED_ORDER);
+        Event event = new Event("Repair order approved", EventType.APPROVED_ORDER);
 
         events.add(event);
     }
 
     public void makeInProgress() {
         if (status != OrderStatus.APPROVED)
-            throw new IllegalStateException("До виконання приступають тільки погоджені замовлення");
+            throw new IllegalStateException("Only approved orders can be started");
 
         if (mechanic == null)
-            throw new IllegalStateException("Механік відсутній");
+            throw new IllegalStateException("A mechanic must be assigned before work can start");
 
         status = OrderStatus.IN_PROGRESS;
 
-        Event event = new Event("Розпочалися роботи", EventType.START_WORKS);
+        Event event = new Event("Work started", EventType.START_WORKS);
 
         events.add(event);
     }
 
     public void complete() {
         if (status != OrderStatus.IN_PROGRESS)
-            throw new IllegalStateException("Закінчити можна тільки ті замовлення, які почали виконуватись");
+            throw new IllegalStateException("Only in-progress orders can be completed");
 
         for (Work item : works) {
             if (!item.isCompleted())
-                throw new IllegalStateException("Ще не вся робота виконана");
+                throw new IllegalStateException("Not all work items have been completed");
         }
 
         mechanic.makeFree();
         status = OrderStatus.COMPLETED;
 
-        Event event = new Event("Замовлення виконано", EventType.COMPLETED_ALL_WORKS);
+        Event event = new Event("Repair order completed", EventType.COMPLETED_ALL_WORKS);
 
         events.add(event);
     }
 
     public void cancel() {
         if (status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED)
-            throw new IllegalStateException("Це замовлення не може бути скасованим");
+            throw new IllegalStateException("This order cannot be cancelled");
 
         status = OrderStatus.CANCELLED;
 
         if (mechanic != null)
             mechanic.makeFree();
 
-        Event event = new Event("Замовлення скасовано", EventType.CANCELLED_ORDER);
+        Event event = new Event("Repair order cancelled", EventType.CANCELLED_ORDER);
 
         events.add(event);
     }
@@ -197,15 +194,13 @@ public class RepairOrder {
         if (o == null || getClass() != o.getClass()) return false;
         RepairOrder order = (RepairOrder) o;
         return  Objects.equals(getCar(), order.getCar()) &&
-                Objects.equals(works, order.works) &&
                 Objects.equals(getMechanic(), order.getMechanic()) &&
                 getPriority() == order.getPriority() &&
-                Objects.equals(getEvents(), order.getEvents()) &&
                 Objects.equals(getID(), order.getID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCar(), works, getMechanic(), getPriority(), getEvents(), getID());
+        return Objects.hash(getCar(), getMechanic(), getPriority(), getID());
     }
 }

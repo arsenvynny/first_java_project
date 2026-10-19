@@ -44,7 +44,7 @@ public class ServiceStorage {
         if (!carList.isEmpty()) {
             for (Car value : carList) {
                 if (value.equals(car))
-                    throw new IllegalStateException("Це авто уже зареєстроване у сервісі");
+                    throw new IllegalStateException("This car is already registered with the service");
              }
         }
 
@@ -56,7 +56,7 @@ public class ServiceStorage {
         if (!orderList.isEmpty()) {
             for (RepairOrder item : orderList) {
                 if (item.equals(order))
-                    throw new IllegalStateException("Це замовлення вже записане у сховище");
+                    throw new IllegalStateException("This order is already registered in storage");
             }
         }
         orderList.add(order);
@@ -66,7 +66,7 @@ public class ServiceStorage {
         if (!clientList.isEmpty()) {
             for (Client item : clientList) {
                 if (item.equals(client))
-                    throw new IllegalStateException("Цей клієнт вже записаний у сховище");
+                    throw new IllegalStateException("This client is already registered in storage");
             }
         }
 
@@ -77,7 +77,7 @@ public class ServiceStorage {
         if (!mechanicList.isEmpty()) {
             for (Mechanic item : mechanicList) {
                 if (item.equals(mechanic))
-                    throw new IllegalStateException("Цей механік вже записаний у сховище");
+                    throw new IllegalStateException("This mechanic is already registered in storage");
             }
         }
         mechanicList.add(mechanic);

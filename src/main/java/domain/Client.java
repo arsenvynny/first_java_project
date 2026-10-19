@@ -10,10 +10,10 @@ public class Client
     public Client(String name, String sureName)
     {
         if (name == null)
-            throw new IllegalArgumentException("Ім'я не може бути пустим!");
+            throw new IllegalArgumentException("The first name cannot be null");
 
         if (sureName == null)
-            throw new IllegalArgumentException("Прізвище не може бути пустим!");
+            throw new IllegalArgumentException("The last name cannot be null");
 
         this.name = name;
         this.surName = sureName;

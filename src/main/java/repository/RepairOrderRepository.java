@@ -5,6 +5,7 @@ import domain.RepairOrder;
 import java.util.Optional;
 
 public interface RepairOrderRepository {
-    public void save(final RepairOrder order);
-    public Optional<RepairOrder> findByID(final String ID);
+    void save(final RepairOrder order);
+    Optional<RepairOrder> findById(final Long ID);
+    Long getCount();
 }

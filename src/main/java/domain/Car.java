@@ -2,6 +2,7 @@ package domain;
 
 import java.util.Objects;
 
+
 public class Car {
     private String model;
     private String mark;
@@ -31,10 +32,10 @@ public class Car {
 
     public Car(String mark, String model, int year, Client owner, String vinCode) {
         if (vinCode == null || vinCode.isEmpty())
-            throw new IllegalArgumentException("Недостовірний VinCode");
+            throw new IllegalArgumentException("The VIN code is invalid");
 
         if (year < 1981 || year > 2026)
-            throw new IllegalArgumentException("Рік випуску недостовірний");
+            throw new IllegalArgumentException("The year of manufacture is invalid");
 
         this.vinCode = vinCode;
         this.year = year;

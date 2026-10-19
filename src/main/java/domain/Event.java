@@ -11,7 +11,7 @@ public class Event {
     public Event(String description, EventType type)
     {
         if (description == null)
-            throw new IllegalArgumentException("Опис не може бути пустими");
+            throw new IllegalArgumentException("The event description cannot be null");
 
         this.description = description;
         this.type = type;

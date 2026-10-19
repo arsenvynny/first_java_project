@@ -11,10 +11,10 @@ public class Mechanic {
 
     public Mechanic(String name, List<Specialization> specializationList ) {
         if (name == null)
-            throw new IllegalArgumentException("Ім'я не може бути пустим");
+            throw new IllegalArgumentException("The mechanic name cannot be null");
 
-        if (specializationList.isEmpty()){
-            throw new IllegalStateException("Не вказані спеціалізації для механіка");
+        if (specializationList == null){
+            throw new IllegalStateException("Specializations must be specified for the mechanic");
         }
 
         this.name = name;
@@ -28,19 +28,19 @@ public class Mechanic {
 
     public void makeBusy() {
         if (!status)
-            throw new IllegalStateException("Механік уже зайнятий");
+            throw new IllegalStateException("The mechanic is already busy");
 
         status = false;
     }
 
     public void makeFree() {
         if (status)
-            throw new IllegalStateException("Механік уже вільний");
+            throw new IllegalStateException("The mechanic is already available");
 
         status = true;
     }
 
-    public boolean canPerfomance(Work work){
+    public boolean canPerform(Work work){
 
         for (Specialization specialization : specializationList){
             if (work.getSpecialization() == specialization){
