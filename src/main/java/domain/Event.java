@@ -13,6 +13,9 @@ public class Event {
         if (description == null)
             throw new IllegalArgumentException("The event description cannot be null");
 
+        if (description.isEmpty())
+            throw new IllegalArgumentException("The event description cannot be null");
+
         this.description = description;
         this.type = type;
         time = LocalDateTime.now();

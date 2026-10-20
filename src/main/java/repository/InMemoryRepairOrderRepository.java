@@ -10,20 +10,21 @@ public class InMemoryRepairOrderRepository
     private final Map<Long, RepairOrder> orders = new HashMap<>();
 
     @Override
-    public Long getCount() {
-        return nextId - 1;
+    public int getCount() {
+        return orders.size();
     }
 
     @Override
     public void save(final RepairOrder newOrder) {
-        if (newOrder.getID() != null) {
-            if (newOrder.getID() >= nextId){
+        if (newOrder.getId() != null) {
+            if (newOrder.getId() >= nextId){
                 throw new IllegalStateException("Invalid order id");
             }
-            orders.put(newOrder.getID(), newOrder);
+            orders.put(newOrder.getId(), newOrder);
+            return;
         }
         newOrder.setId(nextId++);
-        orders.put(newOrder.getID(), newOrder);
+        orders.put(newOrder.getId(), newOrder);
 
     }
 

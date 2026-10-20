@@ -27,7 +27,7 @@ public class RepairOrder {
         this.id = Id;
     }
 
-    public Long getID() {return id;}
+    public Long getId() {return id;}
 
     public List<Work> getWork() {
         return new ArrayList<>(works);
@@ -196,11 +196,11 @@ public class RepairOrder {
         return  Objects.equals(getCar(), order.getCar()) &&
                 Objects.equals(getMechanic(), order.getMechanic()) &&
                 getPriority() == order.getPriority() &&
-                Objects.equals(getID(), order.getID());
+                Objects.equals(getId(), order.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCar(), getMechanic(), getPriority(), getID());
+        return Objects.hash(getCar(), getMechanic(), getPriority(), getId());
     }
 }
