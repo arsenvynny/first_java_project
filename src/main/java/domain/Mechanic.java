@@ -14,7 +14,11 @@ public class Mechanic {
             throw new IllegalArgumentException("The mechanic name cannot be null");
 
         if (specializationList == null){
-            throw new IllegalStateException("Specializations must be specified for the mechanic");
+            throw new IllegalArgumentException("Specializations must be specified for the mechanic");
+        }
+
+        if (specializationList.isEmpty()){
+            throw new IllegalArgumentException("Specializations must be specified for the mechanic");
         }
 
         this.name = name;

@@ -7,16 +7,16 @@ public class Client
     private String name;
     private String surName;
 
-    public Client(String name, String sureName)
+    public Client(String name, String surName)
     {
-        if (name == null)
+        if (name == null || name.isEmpty())
             throw new IllegalArgumentException("The first name cannot be null");
 
-        if (sureName == null)
+        if (surName == null || surName.isEmpty())
             throw new IllegalArgumentException("The last name cannot be null");
 
         this.name = name;
-        this.surName = sureName;
+        this.surName = surName;
     }
 
     @Override

@@ -15,10 +15,22 @@ public class Work
     public Work(String description, String workCost, String autoPartsCost, Specialization specialization)
     {
         if (description == null)
-            throw new IllegalArgumentException("The work description cannot be null");
+            throw new IllegalArgumentException("The work description cannot be empty");
 
-        if (workCost == null || autoPartsCost == null)
-            throw new IllegalArgumentException("Work and parts costs cannot be null");
+        if (description.isEmpty())
+            throw new IllegalArgumentException("The work description cannot be empty");
+
+        if (workCost == null)
+            throw new IllegalArgumentException("Work cost cannot be empty");
+
+        if (workCost.isEmpty())
+            throw new IllegalArgumentException("Work cost cannot be empty");
+
+        if (autoPartsCost == null)
+            throw new IllegalArgumentException("Parts cost cannot be empty");
+
+        if (autoPartsCost.isEmpty())
+            throw new IllegalArgumentException("Parts cost cannot be empty");
 
         if (new BigDecimal(workCost).compareTo(BigDecimal.ZERO) < 0 )
             throw new IllegalArgumentException("The cost cannot be negative");

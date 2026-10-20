@@ -34,8 +34,11 @@ public class Car {
         if (vinCode == null || vinCode.isEmpty())
             throw new IllegalArgumentException("The VIN code is invalid");
 
-        if (year < 1981 || year > 2026)
-            throw new IllegalArgumentException("The year of manufacture is invalid");
+        if (mark == null || mark.isEmpty())
+            throw new IllegalArgumentException("The mark is invalid");
+
+        if (model == null || model.isEmpty())
+            throw new IllegalArgumentException("The name is invalid");
 
         this.vinCode = vinCode;
         this.year = year;
