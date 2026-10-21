@@ -19,10 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GetTotalPartsTest {
 
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
     private Client client;
     private Car car;
 
+    @BeforeEach
     public void setUp() {
 
         client = new Client("Arsen", "Vynnytskyi");
@@ -37,7 +39,9 @@ public class GetTotalPartsTest {
     void getTotalPrice_CalculatingTotalNormalOrderPrice_isCorrect
             (String workCost1, String partsCost1, String workCost2, String partsCost2, String expected){
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 workCost1,
@@ -49,11 +53,11 @@ public class GetTotalPartsTest {
                 partsCost2,
                 Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
-        PricePolicy calculator = new PricePolicy();
+        PricePolicy calculator = new PricePolicy(repairOrderService);
 
         assertEquals(expected, calculator.getTotalPrice(order).toString());
     }
@@ -66,7 +70,9 @@ public class GetTotalPartsTest {
     void getTotalPrice_CalculatingTotalUrgedOrderPrice_isCorrect
             (String workCost1, String partsCost1, String workCost2, String partsCost2, String expected){
 
-        order = new RepairOrder(car, Priority.URGED);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.URGED);
 
         Work work1 = new Work("Change wheels",
                 workCost1,
@@ -78,11 +84,11 @@ public class GetTotalPartsTest {
                 partsCost2,
                 Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
-        PricePolicy calculator = new PricePolicy();
+        PricePolicy calculator = new PricePolicy(repairOrderService);
 
         assertEquals(expected, calculator.getTotalPrice(order).toString());
     }

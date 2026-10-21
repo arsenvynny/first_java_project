@@ -15,19 +15,19 @@ public class AssignMechanicTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
-    private RepairOrderRepository repository;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
     private List<Work> works = new ArrayList<>();
 
     @BeforeEach
     public void setUp() {
 
-        repository = new InMemoryRepairOrderRepository();
-
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                              "100",
@@ -39,16 +39,16 @@ public class AssignMechanicTest {
                               "4000",
                               Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
     }
 
     @Test
     void assignMechanic_addingMechanic_MechanicIsAdded_MechanicIsBusy(){
 
-        order.approve();
+        repairOrderService.approve(order);
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class AssignMechanicTest {
 
         Mechanic mechanic = new Mechanic("Arsen", specializations);
 
-        order.assignMechanic(mechanic);
+        repairOrderService.assignMechanic(order, mechanic);
 
         assertNotNull(order.getMechanic());
         assertFalse(mechanic.isAvailable());
@@ -73,19 +73,23 @@ public class AssignMechanicTest {
 
         Mechanic mechanic = new Mechanic("Arsen", specializations);
 
-        assertThrows(IllegalStateException.class, () -> order.assignMechanic(mechanic));
+        assertThrows(IllegalStateException.class, () -> repairOrderService.assignMechanic(order, mechanic));
     }
 
     @Test
     void assignMechanic_addingNullMechanicValue_ExceptionThrow(){
 
+        repairOrderService.approve(order);
+
         Mechanic mechanic = null;
 
-        assertThrows(IllegalStateException.class, () -> order.assignMechanic(mechanic));
+        assertThrows(IllegalStateException.class, () -> repairOrderService.assignMechanic(order, mechanic));
     }
 
     @Test
     void assignMechanic_addingBusyMechanic_ExceptionThrow(){
+
+        repairOrderService.approve(order);
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -95,11 +99,13 @@ public class AssignMechanicTest {
         Mechanic mechanic = new Mechanic("Arsen", specializations);
         mechanic.makeBusy();
 
-        assertThrows(IllegalStateException.class, () -> order.assignMechanic(mechanic));
+        assertThrows(IllegalStateException.class, () -> repairOrderService.assignMechanic(order, mechanic));
     }
 
     @Test
     void assignMechanic_addingMechanicWithDifferentSpecialization_ExceptionThrow(){
+
+        repairOrderService.approve(order);
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -108,7 +114,7 @@ public class AssignMechanicTest {
 
         Mechanic mechanic = new Mechanic("Arsen", specializations);
 
-        assertThrows(IllegalStateException.class, () -> order.assignMechanic(mechanic));
+        assertThrows(IllegalStateException.class, () -> repairOrderService.assignMechanic(order, mechanic));
     }
 
 }

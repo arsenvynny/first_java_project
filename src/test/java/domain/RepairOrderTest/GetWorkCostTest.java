@@ -25,7 +25,8 @@ public class GetWorkCostTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
 
     @BeforeEach
     public void setUp() {
@@ -43,7 +44,9 @@ public class GetWorkCostTest {
     void getWorkPrice_CalculateWorkCost_isCorrectPrice(String workCost1, String partsCost1,
                                                          String workCost2, String partsCost2, String expected){
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 workCost1,
@@ -55,11 +58,11 @@ public class GetWorkCostTest {
                 partsCost2,
                 Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
-        assertEquals(new BigDecimal(expected), order.getWorkPrice());
+        assertEquals(new BigDecimal(expected), repairOrderService.getWorkPrice(order));
     }
 
 }

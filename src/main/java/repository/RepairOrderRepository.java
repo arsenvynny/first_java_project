@@ -1,11 +1,11 @@
 package repository;
 
-import domain.RepairOrder;
+import domain.Order;
 
 import java.util.Optional;
 
 public interface RepairOrderRepository {
-    void save(final RepairOrder order);
-    Optional<RepairOrder> findById(final Long ID);
+    Order save(final Order order);
+    Optional<Order> findById(final Long ID);
     int getCount();
 }

@@ -17,7 +17,8 @@ public class DiagnosingTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
 
     @BeforeEach
     public void setUp() {
@@ -25,13 +26,15 @@ public class DiagnosingTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
     }
 
     @Test
     void diagnose_MakeDiagnostic_isDiagnosed(){
 
-        order.diagnose();
+        repairOrderService.diagnose(order);
 
         assertEquals(OrderStatus.DIAGNOSED, order.getStatus());
     }
@@ -39,8 +42,8 @@ public class DiagnosingTest {
     @Test
     void diagnose_diagnoseCanceledOrder_ExceptionThrow(){
 
-        order.cancel();
+        repairOrderService.cancel(order);
 
-        assertThrows(IllegalStateException.class, () -> order.diagnose());
+        assertThrows(IllegalStateException.class, () -> repairOrderService.diagnose(order));
     }
 }

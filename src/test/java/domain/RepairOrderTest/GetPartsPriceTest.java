@@ -25,7 +25,8 @@ public class GetPartsPriceTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
 
     @BeforeEach
     public void setUp() {
@@ -33,7 +34,9 @@ public class GetPartsPriceTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
 
     }
 
@@ -55,10 +58,10 @@ public class GetPartsPriceTest {
                 partsCost2,
                 Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
-        assertEquals(new BigDecimal(expected), order.getPartsPrice());
+        assertEquals(new BigDecimal(expected), repairOrderService.getPartsPrice(order));
     }
 }

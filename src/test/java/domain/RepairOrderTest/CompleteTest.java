@@ -22,7 +22,8 @@ public class CompleteTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
     private List<Specialization> specializations = new ArrayList<>();
 
     @BeforeEach
@@ -31,7 +32,9 @@ public class CompleteTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 "100",
@@ -43,9 +46,9 @@ public class CompleteTest {
                 "4000",
                 Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
         Specialization specialization1 = Specialization.GENERAL_SERVICE;
         Specialization specialization2 = Specialization.ELECTRICIAN;
@@ -53,23 +56,23 @@ public class CompleteTest {
         specializations.add(specialization1);
         specializations.add(specialization2);
 
-        order.approve();
+        repairOrderService.approve(order);
 
         Mechanic mechanic = new Mechanic("Arsen", specializations);
 
-        order.assignMechanic(mechanic);
+        repairOrderService.assignMechanic(order, mechanic);
     }
 
     @Test
     void complete_completeOrder_isCompleted_isMechanicFree(){
 
-        order.makeInProgress();
+        repairOrderService.makeInProgress(order);
 
-        for (Work work : order.getWork()){
+        for (Work work : order.getWorks()){
             work.makeDone();
         }
 
-        order.complete();
+        repairOrderService.complete(order);
 
         assertEquals(OrderStatus.COMPLETED, order.getStatus());
     }
@@ -77,9 +80,9 @@ public class CompleteTest {
     @Test
     void complete_completeOrderWithOutDoneWorks_ExceptionThrow(){
 
-        order.makeInProgress();
+        repairOrderService.makeInProgress(order);
 
-        assertThrows(IllegalStateException.class, () -> order.complete());
+        assertThrows(IllegalStateException.class, () -> repairOrderService.complete(order));
 
         assertFalse(order.getMechanic().isAvailable());
     }
@@ -87,11 +90,11 @@ public class CompleteTest {
     @Test
     void complete_completeNonInProgressOrder_ExceptionThrow(){
 
-        for (Work work : order.getWork()){
+        for (Work work : order.getWorks()){
             work.makeDone();
         }
 
-        assertThrows(IllegalStateException.class, () -> order.complete());
+        assertThrows(IllegalStateException.class, () -> repairOrderService.complete(order));
 
         assertFalse(order.getMechanic().isAvailable());
     }

@@ -22,7 +22,8 @@ public class CancelTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
     private List<Specialization> specializations = new ArrayList<>();
 
     @BeforeEach
@@ -31,7 +32,9 @@ public class CancelTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 "100",
@@ -43,9 +46,9 @@ public class CancelTest {
                 "4000",
                 Specialization.ELECTRICIAN);
 
-        order.diagnose();
-        order.addWork(work1);
-        order.addWork(work2);
+        repairOrderService.diagnose(order);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work2);
 
         Specialization specialization1 = Specialization.GENERAL_SERVICE;
         Specialization specialization2 = Specialization.ELECTRICIAN;
@@ -53,19 +56,19 @@ public class CancelTest {
         specializations.add(specialization1);
         specializations.add(specialization2);
 
-        order.approve();
+        repairOrderService.approve(order);
 
         Mechanic mechanic = new Mechanic("Arsen", specializations);
 
-        order.assignMechanic(mechanic);
+        repairOrderService.assignMechanic(order, mechanic);
 
-        order.makeInProgress();
+        repairOrderService.makeInProgress(order);
     }
 
     @Test
     void cancel_cancelOrder_isCanceled(){
 
-        order.cancel();
+        repairOrderService.cancel(order);
 
         assertEquals(OrderStatus.CANCELLED, order.getStatus());
     }
@@ -73,21 +76,21 @@ public class CancelTest {
     @Test
     void cancel_cancelCompletedOrder_ExceptionThrow(){
 
-        for (Work work : order.getWork()){
+        for (Work work : order.getWorks()){
             work.makeDone();
         }
 
-        order.complete();
+        repairOrderService.complete(order);
 
-        assertThrows(IllegalStateException.class, () -> order.cancel());
+        assertThrows(IllegalStateException.class, () -> repairOrderService.cancel(order));
     }
 
     @Test
     void cancel_cancelCanceledOrder_ExceptionThrow(){
 
-        order.cancel();
+        repairOrderService.cancel(order);
 
-        assertThrows(IllegalStateException.class, () -> order.cancel());
+        assertThrows(IllegalStateException.class, () -> repairOrderService.cancel(order));
     }
 
 }

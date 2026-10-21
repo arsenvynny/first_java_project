@@ -19,7 +19,8 @@ public class ApprovingTest {
 
     private Client client;
     private Car car;
-    private RepairOrder order;
+    private Order order;
+    private service.RepairOrderService repairOrderService;
 
     @BeforeEach
     public void setUp() {
@@ -27,9 +28,11 @@ public class ApprovingTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        order = new RepairOrder(car, Priority.NORMAL);
+        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
 
-        order.diagnose();
+        order = repairOrderService.createOrder(car, Priority.NORMAL);
+
+        repairOrderService.diagnose(order);
     }
 
     @Test
@@ -45,10 +48,10 @@ public class ApprovingTest {
                 "4000",
                 Specialization.ELECTRICIAN);
 
-        order.addWork(work1);
-        order.addWork(work1);
+        repairOrderService.addWork(order, work1);
+        repairOrderService.addWork(order, work1);
 
-        order.approve();
+        repairOrderService.approve(order);
 
         assertEquals(OrderStatus.APPROVED, order.getStatus());
     }
@@ -56,6 +59,6 @@ public class ApprovingTest {
     @Test
     void approve_approvingOrderWithoutWorks_isApproved(){
 
-        assertThrows(IllegalStateException.class, () -> order.approve());
+        assertThrows(IllegalStateException.class, () -> repairOrderService.approve(order));
     }
 }
