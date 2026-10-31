@@ -11,34 +11,20 @@ public class PricePolicy {
     static private final BigDecimal PROFIT = new BigDecimal("0.3");
     static private final BigDecimal DISCOUNT = new BigDecimal("0.1");
 
-    private final RepairOrderService repairOrderService;
-
-    public PricePolicy(RepairOrderService repairOrderService) {
-        this.repairOrderService = repairOrderService;
-    }
-
-    public BigDecimal getTotalPrice(final Order order) {
-        BigDecimal totalPrice = repairOrderService.getWorkPrice(order);
-        if (order.getPriority() == Priority.URGED) {
+    public BigDecimal getTotalPrice(BigDecimal workPrice, BigDecimal partsPrice, Priority priority) {
+        BigDecimal totalPrice = workPrice;
+        if (priority == Priority.URGED) {
             totalPrice = totalPrice.add(totalPrice.multiply(URGENT_FEE));
         }
 
-        totalPrice = totalPrice.add(repairOrderService.getPartsPrice(order));
+        totalPrice = totalPrice.add(partsPrice);
         totalPrice = totalPrice.add(totalPrice.multiply(PROFIT));
 
         return totalPrice;
     }
 
-    public BigDecimal getTotalDiscountPrice(final Order order) {
-        BigDecimal totalPrice = repairOrderService.getWorkPrice(order);
-
-        if (order.getPriority() == Priority.URGED) {
-            totalPrice = totalPrice.add(totalPrice.multiply(URGENT_FEE));
-        }
-
-        totalPrice = totalPrice.add(repairOrderService.getPartsPrice(order));
-        totalPrice = totalPrice.add(totalPrice.multiply(PROFIT));
-
-        return totalPrice.add(totalPrice.multiply(DISCOUNT));
+    public BigDecimal getTotalDiscountPrice(BigDecimal workPrice, BigDecimal partsPrice, Priority priority) {
+        BigDecimal totalPrice = getTotalPrice(workPrice, partsPrice, priority);
+        return totalPrice.subtract(totalPrice.multiply(DISCOUNT));
     }
 }
