@@ -1,0 +1,142 @@
+package service;
+
+import domain.*;
+import repository.RepairOrderRepository;
+
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
+
+public class RepairOrderService {
+    private final RepairOrderRepository repository;
+
+    public RepairOrderService(RepairOrderRepository repository) {
+        this.repository = Objects.requireNonNull(repository, "repository must not be null");
+    }
+
+    public Order createOrder(Car car, Priority priority) {
+        Order order = new Order(car, priority);
+        addEvent(order, "Repair order created", EventType.CREATED_ORDER);
+        return repository.save(order);
+    }
+
+
+    public Optional<Order> findOrderById(Long id) {
+        return repository.findById(id);
+    }
+
+    public int getOrderCount() {
+        return repository.getCount();
+    }
+
+    public void addWork(Order order, Work work) {
+        if (order.getStatus() != OrderStatus.DIAGNOSED)
+            throw new IllegalStateException("Work cannot be added to this order in its current status");
+
+        if (work == null)
+            throw new IllegalStateException("Work must be specified");
+
+        order.getWorks().add(work);
+        addEvent(order, "Work added to repair order", EventType.WORK_ADDED);
+    }
+
+    public void assignMechanic(Order order, Mechanic mechanic) {
+        if (order.getStatus() != OrderStatus.APPROVED)
+            throw new IllegalStateException("A mechanic can only be assigned to an approved order");
+
+        if (mechanic == null)
+            throw new IllegalStateException("A mechanic must be specified");
+
+        if (order.getMechanic() != null)
+            throw new IllegalStateException("A mechanic has already been assigned");
+
+        if (!mechanic.isAvailable())
+            throw new IllegalStateException("The mechanic is busy");
+
+        for (Work work : order.getWorks()) {
+            if (!mechanic.canPerform(work))
+                throw new IllegalStateException("The mechanic does not have the required specialization");
+        }
+
+        order.setMechanic(mechanic);
+        mechanic.makeBusy();
+        addEvent(order, "Mechanic assigned", EventType.MECHANIC_ASSIGNED);
+    }
+
+    public void diagnose(Order order) {
+        if (order.getStatus() != OrderStatus.CREATED)
+            throw new IllegalStateException("Diagnosis can only be performed on newly created orders");
+
+        order.setStatus(OrderStatus.DIAGNOSED);
+        addEvent(order, "Diagnosis completed", EventType.DIAGNOSED_COMPLETED);
+    }
+
+    public void approve(Order order) {
+        if (order.getStatus() != OrderStatus.DIAGNOSED)
+            throw new IllegalStateException("Only diagnosed orders can be approved");
+
+        if (order.getWorks().isEmpty())
+            throw new IllegalStateException("At least one work item is required for approval");
+
+        order.setStatus(OrderStatus.APPROVED);
+        addEvent(order, "Repair order approved", EventType.APPROVED_ORDER);
+    }
+
+    public void makeInProgress(Order order) {
+        if (order.getStatus() != OrderStatus.APPROVED)
+            throw new IllegalStateException("Only approved orders can be started");
+
+        if (order.getMechanic() == null)
+            throw new IllegalStateException("A mechanic must be assigned before work can start");
+
+        order.setStatus(OrderStatus.IN_PROGRESS);
+        addEvent(order, "Work started", EventType.START_WORKS);
+    }
+
+    public void complete(Order order) {
+        if (order.getStatus() != OrderStatus.IN_PROGRESS)
+            throw new IllegalStateException("Only in-progress orders can be completed");
+
+        for (Work item : order.getWorks()) {
+            if (!item.isCompleted())
+                throw new IllegalStateException("Not all work items have been completed");
+        }
+
+        order.getMechanic().makeFree();
+        order.setStatus(OrderStatus.COMPLETED);
+        addEvent(order, "Repair order completed", EventType.COMPLETED_ALL_WORKS);
+    }
+
+    public void cancel(Order order) {
+        if (order.getStatus() == OrderStatus.COMPLETED || order.getStatus() == OrderStatus.CANCELLED)
+            throw new IllegalStateException("This order cannot be cancelled");
+
+        order.setStatus(OrderStatus.CANCELLED);
+        if (order.getMechanic() != null)
+            order.getMechanic().makeFree();
+
+        addEvent(order, "Repair order cancelled", EventType.CANCELLED_ORDER);
+    }
+
+    public BigDecimal getWorkPrice(Order order) {
+        BigDecimal totalWorkPrice = BigDecimal.ZERO;
+        for (Work work : order.getWorks())
+            totalWorkPrice = totalWorkPrice.add(work.getWorkCost());
+        return totalWorkPrice;
+    }
+
+    public BigDecimal getPartsPrice(Order order) {
+        BigDecimal totalPartsPrice = BigDecimal.ZERO;
+        for (Work work : order.getWorks())
+            totalPartsPrice = totalPartsPrice.add(work.getAutoPartsCost());
+        return totalPartsPrice;
+    }
+
+    public BigDecimal getTotalOrderPrice(Order order) {
+        return getPartsPrice(order).add(getWorkPrice(order));
+    }
+
+    private void addEvent(Order order, String description, EventType type) {
+        order.getEvents().add(new Event(description, type));
+    }
+}
