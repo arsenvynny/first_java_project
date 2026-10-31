@@ -22,9 +22,10 @@ public class GetTotalOrderPriceTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
     }
 
@@ -34,7 +35,7 @@ public class GetTotalOrderPriceTest {
             "300, 500, 800, 1000, 2600"
     })
     void getWorkPrice_CalculateWorkCost_isCorrectPrice(String workCost1, String partsCost1,
-                                                       String workCost2, String partsCost2, String expected){
+                                                       String workCost2, String partsCost2, String expected) {
 
         Work work1 = new Work("Change wheels",
                 workCost1,

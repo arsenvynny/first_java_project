@@ -3,20 +3,12 @@ package domain.RepairOrderTest;
 import domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 public class CancelTest {
 
@@ -32,9 +24,10 @@ public class CancelTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 "100",
@@ -66,7 +59,7 @@ public class CancelTest {
     }
 
     @Test
-    void cancel_cancelOrder_isCanceled(){
+    void cancel_cancelOrder_isCanceled() {
 
         repairOrderService.cancel(order);
 
@@ -74,9 +67,9 @@ public class CancelTest {
     }
 
     @Test
-    void cancel_cancelCompletedOrder_ExceptionThrow(){
+    void cancel_cancelCompletedOrder_ExceptionThrow() {
 
-        for (Work work : order.getWorks()){
+        for (Work work : order.getWorks()) {
             work.makeDone();
         }
 
@@ -86,7 +79,7 @@ public class CancelTest {
     }
 
     @Test
-    void cancel_cancelCanceledOrder_ExceptionThrow(){
+    void cancel_cancelCanceledOrder_ExceptionThrow() {
 
         repairOrderService.cancel(order);
 

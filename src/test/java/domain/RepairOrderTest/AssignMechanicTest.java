@@ -3,8 +3,6 @@ package domain.RepairOrderTest;
 import domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +23,20 @@ public class AssignMechanicTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
-                             "100",
-                             "4000",
-                             Specialization.GENERAL_SERVICE);
+                "100",
+                "4000",
+                Specialization.GENERAL_SERVICE);
 
         Work work2 = new Work("fix accumulator",
-                              "100",
-                              "4000",
-                              Specialization.ELECTRICIAN);
+                "100",
+                "4000",
+                Specialization.ELECTRICIAN);
 
         repairOrderService.diagnose(order);
         repairOrderService.addWork(order, work1);
@@ -46,7 +45,7 @@ public class AssignMechanicTest {
     }
 
     @Test
-    void assignMechanic_addingMechanic_MechanicIsAdded_MechanicIsBusy(){
+    void assignMechanic_addingMechanic_MechanicIsAdded_MechanicIsBusy() {
 
         repairOrderService.approve(order);
 
@@ -64,7 +63,7 @@ public class AssignMechanicTest {
     }
 
     @Test
-    void assignMechanic_addingMechanicToNotApprovedOrder_ExceptionThrow(){
+    void assignMechanic_addingMechanicToNotApprovedOrder_ExceptionThrow() {
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -77,7 +76,7 @@ public class AssignMechanicTest {
     }
 
     @Test
-    void assignMechanic_addingNullMechanicValue_ExceptionThrow(){
+    void assignMechanic_addingNullMechanicValue_ExceptionThrow() {
 
         repairOrderService.approve(order);
 
@@ -87,7 +86,7 @@ public class AssignMechanicTest {
     }
 
     @Test
-    void assignMechanic_addingBusyMechanic_ExceptionThrow(){
+    void assignMechanic_addingBusyMechanic_ExceptionThrow() {
 
         repairOrderService.approve(order);
 
@@ -103,7 +102,7 @@ public class AssignMechanicTest {
     }
 
     @Test
-    void assignMechanic_addingMechanicWithDifferentSpecialization_ExceptionThrow(){
+    void assignMechanic_addingMechanicWithDifferentSpecialization_ExceptionThrow() {
 
         repairOrderService.approve(order);
 

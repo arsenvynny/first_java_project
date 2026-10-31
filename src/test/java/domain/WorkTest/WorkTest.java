@@ -2,22 +2,12 @@ package domain.WorkTest;
 
 import domain.Specialization;
 import domain.Work;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
-
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkTest {
 
@@ -91,7 +81,7 @@ public class WorkTest {
             "150, -0.1, 32, 0"
     })
     void Work_creatingWorkWithZeroOrMinusValue_ExceptionTrows
-            (String workCost, String partsCost){
+            (String workCost, String partsCost) {
 
         String description = "wheels change";
         Specialization specialization = Specialization.GENERAL_SERVICE;

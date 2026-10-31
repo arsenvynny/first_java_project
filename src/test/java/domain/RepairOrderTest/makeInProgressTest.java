@@ -3,20 +3,12 @@ package domain.RepairOrderTest;
 import domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 public class makeInProgressTest {
 
@@ -32,9 +24,10 @@ public class makeInProgressTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 "100",
@@ -60,7 +53,7 @@ public class makeInProgressTest {
     }
 
     @Test
-    void makeInProgress_makeOrderInProgress_isInProgress(){
+    void makeInProgress_makeOrderInProgress_isInProgress() {
 
         Mechanic mechanic = new Mechanic("Arsen", specializations);
 
@@ -71,7 +64,7 @@ public class makeInProgressTest {
     }
 
     @Test
-    void makeInProgress_TryToMakeInProgressWithNullMechanic_ExceptionThrow(){
+    void makeInProgress_TryToMakeInProgressWithNullMechanic_ExceptionThrow() {
 
         Mechanic mechanic = null;
 

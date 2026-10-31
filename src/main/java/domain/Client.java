@@ -2,13 +2,11 @@ package domain;
 
 import java.util.Objects;
 
-public class Client
-{
+public class Client {
     private String name;
     private String surName;
 
-    public Client(String name, String surName)
-    {
+    public Client(String name, String surName) {
         if (name == null || name.isEmpty())
             throw new IllegalArgumentException("The first name cannot be null");
 

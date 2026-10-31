@@ -2,19 +2,15 @@ package domain.EventTest;
 
 import domain.Event;
 import domain.EventType;
-import domain.Specialization;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CreatingEvent {
 
     @Test
-    void Event_creatingEvent_isCreated(){
+    void Event_creatingEvent_isCreated() {
 
         String description = "Mechanic added";
         EventType eventType = EventType.APPROVED_ORDER;
@@ -26,7 +22,7 @@ public class CreatingEvent {
     }
 
     @Test
-    void Event_creatingEventWithInvalidDescription_ExceptionThrow(){
+    void Event_creatingEventWithInvalidDescription_ExceptionThrow() {
 
         String description = null;
         EventType eventType = EventType.APPROVED_ORDER;

@@ -3,17 +3,9 @@ package domain.RepairOrderTest;
 import domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 public class ApprovingTest {
 
@@ -28,15 +20,16 @@ public class ApprovingTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
         repairOrderService.diagnose(order);
     }
 
     @Test
-    void approve_approvingOrder_isApproved(){
+    void approve_approvingOrder_isApproved() {
 
         Work work1 = new Work("Change wheels",
                 "100",
@@ -57,7 +50,7 @@ public class ApprovingTest {
     }
 
     @Test
-    void approve_approvingOrderWithoutWorks_isApproved(){
+    void approve_approvingOrderWithoutWorks_isApproved() {
 
         assertThrows(IllegalStateException.class, () -> repairOrderService.approve(order));
     }

@@ -1,12 +1,12 @@
 package pricing;
 
-import domain.Priority;
 import domain.Order;
+import domain.Priority;
 import service.RepairOrderService;
 
 import java.math.BigDecimal;
 
-public class PricePolicy{
+public class PricePolicy {
     static private final BigDecimal URGENT_FEE = new BigDecimal("0.2");
     static private final BigDecimal PROFIT = new BigDecimal("0.3");
     static private final BigDecimal DISCOUNT = new BigDecimal("0.1");
@@ -17,7 +17,7 @@ public class PricePolicy{
         this.repairOrderService = repairOrderService;
     }
 
-    public BigDecimal getTotalPrice(final Order order){
+    public BigDecimal getTotalPrice(final Order order) {
         BigDecimal totalPrice = repairOrderService.getWorkPrice(order);
         if (order.getPriority() == Priority.URGED) {
             totalPrice = totalPrice.add(totalPrice.multiply(URGENT_FEE));
@@ -29,7 +29,7 @@ public class PricePolicy{
         return totalPrice;
     }
 
-    public BigDecimal getTotalDiscountPrice(final Order order){
+    public BigDecimal getTotalDiscountPrice(final Order order) {
         BigDecimal totalPrice = repairOrderService.getWorkPrice(order);
 
         if (order.getPriority() == Priority.URGED) {

@@ -2,7 +2,9 @@ package repository;
 
 import domain.Order;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class InMemoryRepairOrderRepository
         implements RepairOrderRepository {
@@ -17,7 +19,7 @@ public class InMemoryRepairOrderRepository
     @Override
     public Order save(final Order newOrder) {
         if (newOrder.getId() != null) {
-            if (newOrder.getId() >= nextId){
+            if (newOrder.getId() >= nextId) {
                 throw new IllegalStateException("Invalid order id");
             }
             orders.put(newOrder.getId(), newOrder);

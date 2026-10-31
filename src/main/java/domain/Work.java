@@ -1,19 +1,20 @@
 package domain;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Work
-{
+@Getter
+public class Work {
     private String description;
-    private boolean isCompleted = false;
+    private boolean isCompleted;
     private BigDecimal workCost;
     private BigDecimal autoPartsCost;
     private Specialization specialization;
 
 
-    public Work(String description, String workCost, String autoPartsCost, Specialization specialization)
-    {
+    public Work(String description, String workCost, String autoPartsCost, Specialization specialization) {
         if (description == null)
             throw new IllegalArgumentException("The work description cannot be empty");
 
@@ -32,10 +33,10 @@ public class Work
         if (autoPartsCost.isEmpty())
             throw new IllegalArgumentException("Parts cost cannot be empty");
 
-        if (new BigDecimal(workCost).compareTo(BigDecimal.ZERO) < 0 )
+        if (new BigDecimal(workCost).compareTo(BigDecimal.ZERO) < 0)
             throw new IllegalArgumentException("The cost cannot be negative");
 
-        if (new BigDecimal(autoPartsCost).compareTo(BigDecimal.ZERO) < 0 )
+        if (new BigDecimal(autoPartsCost).compareTo(BigDecimal.ZERO) < 0)
             throw new IllegalArgumentException("The cost cannot be negative");
 
         this.autoPartsCost = new BigDecimal(autoPartsCost);
@@ -44,8 +45,7 @@ public class Work
         this.specialization = specialization;
     }
 
-    public void makeDone()
-    {
+    public void makeDone() {
         if (isCompleted)
             throw new IllegalStateException("This work item has already been completed");
 
@@ -56,7 +56,7 @@ public class Work
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Work work = (Work) o;
-        return  Objects.equals(description, work.description) &&
+        return Objects.equals(description, work.description) &&
                 Objects.equals(workCost, work.workCost) &&
                 Objects.equals(autoPartsCost, work.autoPartsCost);
     }
@@ -66,19 +66,5 @@ public class Work
         return Objects.hash(description, workCost, autoPartsCost);
     }
 
-    public Specialization getSpecialization() {
-        return specialization;
-    }
 
-    public BigDecimal getWorkCost() { return workCost; }
-
-    public boolean isCompleted() { return isCompleted; }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public BigDecimal getAutoPartsCost() {
-        return autoPartsCost;
-    }
 }

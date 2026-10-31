@@ -2,36 +2,24 @@ package domain.CarTest;
 
 import domain.Car;
 import domain.Client;
-import domain.Mechanic;
-import domain.Specialization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreatingCarTest {
 
     private Client client;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
         client = new Client("Arsen", "Vynnytskyi");
     }
 
     @Test
-    void createCar_creatingCar_isCreated(){
+    void createCar_creatingCar_isCreated() {
 
         String mark = "Toyota";
         String model = "Camry";
@@ -49,7 +37,7 @@ public class CreatingCarTest {
     }
 
     @Test
-    void createCar_creatingCarWithNullModel_ExceptionThrow(){
+    void createCar_creatingCarWithNullModel_ExceptionThrow() {
 
         String mark = "Toyota";
         String model = null;
@@ -67,7 +55,7 @@ public class CreatingCarTest {
     }
 
     @Test
-    void createCar_creatingCarWithNullMark_ExceptionThrow(){
+    void createCar_creatingCarWithNullMark_ExceptionThrow() {
 
         String mark = null;
         String model = "Camry";
@@ -84,7 +72,8 @@ public class CreatingCarTest {
 
     }
 
-    void createCar_creatingCarWithNullVinCode_ExceptionThrow(){
+    @Test
+    void createCar_creatingCarWithNullVinCode_ExceptionThrow() {
 
         String mark = "Toyota";
         String model = "Camry";

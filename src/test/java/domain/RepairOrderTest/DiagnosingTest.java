@@ -5,13 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 public class DiagnosingTest {
 
@@ -26,13 +20,14 @@ public class DiagnosingTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
     }
 
     @Test
-    void diagnose_MakeDiagnostic_isDiagnosed(){
+    void diagnose_MakeDiagnostic_isDiagnosed() {
 
         repairOrderService.diagnose(order);
 
@@ -40,7 +35,7 @@ public class DiagnosingTest {
     }
 
     @Test
-    void diagnose_diagnoseCanceledOrder_ExceptionThrow(){
+    void diagnose_diagnoseCanceledOrder_ExceptionThrow() {
 
         repairOrderService.cancel(order);
 

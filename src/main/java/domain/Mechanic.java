@@ -1,23 +1,26 @@
 package domain;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
 public class Mechanic {
     private String name;
     private boolean status = true;
     private List<Specialization> specializationList = new ArrayList<>();
 
-    public Mechanic(String name, List<Specialization> specializationList ) {
+    public Mechanic(String name, List<Specialization> specializationList) {
         if (name == null)
             throw new IllegalArgumentException("The mechanic name cannot be null");
 
-        if (specializationList == null){
+        if (specializationList == null) {
             throw new IllegalArgumentException("Specializations must be specified for the mechanic");
         }
 
-        if (specializationList.isEmpty()){
+        if (specializationList.isEmpty()) {
             throw new IllegalArgumentException("Specializations must be specified for the mechanic");
         }
 
@@ -44,18 +47,14 @@ public class Mechanic {
         status = true;
     }
 
-    public boolean canPerform(Work work){
+    public boolean canPerform(Work work) {
 
-        for (Specialization specialization : specializationList){
-            if (work.getSpecialization() == specialization){
+        for (Specialization specialization : specializationList) {
+            if (work.getSpecialization() == specialization) {
                 return true;
             }
         }
         return false;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isAvailable() {
@@ -66,7 +65,7 @@ public class Mechanic {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Mechanic mechanic = (Mechanic) o;
-        return  Objects.equals(getName(), mechanic.getName()) &&
+        return Objects.equals(getName(), mechanic.getName()) &&
                 Objects.equals(getSpecializationList(), mechanic.getSpecializationList());
     }
 

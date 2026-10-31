@@ -3,20 +3,11 @@ package domain.RepairOrderTest;
 import domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CompleteTest {
 
@@ -32,9 +23,10 @@ public class CompleteTest {
         client = new Client("Arsen", "Vynnytskyi");
         car = new Car("Toyota", "Camry", 2026, client, "BC0000AT");
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 "100",
@@ -64,11 +56,11 @@ public class CompleteTest {
     }
 
     @Test
-    void complete_completeOrder_isCompleted_isMechanicFree(){
+    void complete_completeOrder_isCompleted_isMechanicFree() {
 
         repairOrderService.makeInProgress(order);
 
-        for (Work work : order.getWorks()){
+        for (Work work : order.getWorks()) {
             work.makeDone();
         }
 
@@ -78,7 +70,7 @@ public class CompleteTest {
     }
 
     @Test
-    void complete_completeOrderWithOutDoneWorks_ExceptionThrow(){
+    void complete_completeOrderWithOutDoneWorks_ExceptionThrow() {
 
         repairOrderService.makeInProgress(order);
 
@@ -88,9 +80,9 @@ public class CompleteTest {
     }
 
     @Test
-    void complete_completeNonInProgressOrder_ExceptionThrow(){
+    void complete_completeNonInProgressOrder_ExceptionThrow() {
 
-        for (Work work : order.getWorks()){
+        for (Work work : order.getWorks()) {
             work.makeDone();
         }
 

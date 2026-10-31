@@ -15,7 +15,7 @@ public class BusyTest {
     Mechanic mechanic;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -27,7 +27,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeBusy_TryToMakeMechanicBusy_isBusy(){
+    void makeBusy_TryToMakeMechanicBusy_isBusy() {
 
         mechanic.makeBusy();
 
@@ -35,7 +35,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeBusy_TryToMakeBusyAlreadyBusyMechanic_ExceptionThrow(){
+    void makeBusy_TryToMakeBusyAlreadyBusyMechanic_ExceptionThrow() {
 
         mechanic.makeBusy();
 
@@ -43,7 +43,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeFree_TryToMakeMechanicFree_isBusy(){
+    void makeFree_TryToMakeMechanicFree_isBusy() {
 
         mechanic.makeBusy();
         mechanic.makeFree();
@@ -52,7 +52,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeFree_TryToMakeFreeAlreadyFreeMechanic_isBusy(){
+    void makeFree_TryToMakeFreeAlreadyFreeMechanic_isBusy() {
 
         assertThrows(IllegalStateException.class, () -> mechanic.makeFree());
 

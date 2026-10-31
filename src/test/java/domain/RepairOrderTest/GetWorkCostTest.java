@@ -2,24 +2,12 @@ package domain.RepairOrderTest;
 
 import domain.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import repository.InMemoryRepairOrderRepository;
-import repository.RepairOrderRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 public class GetWorkCostTest {
 
@@ -42,11 +30,12 @@ public class GetWorkCostTest {
             "300, 500, 800, 1000, 1100"
     })
     void getWorkPrice_CalculateWorkCost_isCorrectPrice(String workCost1, String partsCost1,
-                                                         String workCost2, String partsCost2, String expected){
+                                                       String workCost2, String partsCost2, String expected) {
 
-        repairOrderService = new service.RepairOrderService(new repository.InMemoryRepairOrderRepository());
+        repairOrderService = new service.RepairOrderService(
+                org.mockito.Mockito.mock(repository.RepairOrderRepository.class));
 
-        order = repairOrderService.createOrder(car, Priority.NORMAL);
+        order = new Order(car, Priority.NORMAL);
 
         Work work1 = new Work("Change wheels",
                 workCost1,
@@ -66,4 +55,3 @@ public class GetWorkCostTest {
     }
 
 }
-
