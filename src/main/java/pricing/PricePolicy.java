@@ -1,8 +1,5 @@
 package pricing;
 
-import domain.Order;
-import domain.Priority;
-import service.RepairOrderService;
 
 import java.math.BigDecimal;
 import java.util.List;
