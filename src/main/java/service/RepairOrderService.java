@@ -1,6 +1,8 @@
 package service;
 
 import domain.*;
+import pricing.OrderPriceInfo;
+import pricing.PricePolicy;
 import repository.RepairOrderRepository;
 
 import java.math.BigDecimal;
@@ -8,9 +10,11 @@ import java.util.Objects;
 
 public class RepairOrderService {
     private final RepairOrderRepository repository;
+    private final PricePolicy pricePolicy;
 
-    public RepairOrderService(RepairOrderRepository repository) {
+    public RepairOrderService(RepairOrderRepository repository, PricePolicy pricePolicy) {
         this.repository = Objects.requireNonNull(repository, "repository must not be null");
+        this.pricePolicy = Objects.requireNonNull(pricePolicy, "pricePolicy must not be null");
     }
 
     public Order createOrder(Car car, Priority priority) {
@@ -149,7 +153,10 @@ public class RepairOrderService {
     }
 
     public BigDecimal getTotalOrderPrice(Order order) {
-        return getPartsPrice(order).add(getWorkPrice(order));
+        return pricePolicy.getTotalPrice(new OrderPriceInfo(
+                getWorkPrice(order),
+                getPartsPrice(order),
+                order.getPriority() == Priority.URGED));
     }
 
     private void addEvent(Order order, String description, EventType type) {

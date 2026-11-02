@@ -5,26 +5,23 @@ import domain.Priority;
 import service.RepairOrderService;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class PricePolicy {
-    static private final BigDecimal URGENT_FEE = new BigDecimal("0.2");
-    static private final BigDecimal PROFIT = new BigDecimal("0.3");
-    static private final BigDecimal DISCOUNT = new BigDecimal("0.1");
 
-    public BigDecimal getTotalPrice(BigDecimal workPrice, BigDecimal partsPrice, Priority priority) {
-        BigDecimal totalPrice = workPrice;
-        if (priority == Priority.URGED) {
-            totalPrice = totalPrice.add(totalPrice.multiply(URGENT_FEE));
-        }
+    private List<PricingRule> rules;
 
-        totalPrice = totalPrice.add(partsPrice);
-        totalPrice = totalPrice.add(totalPrice.multiply(PROFIT));
-
-        return totalPrice;
+    public PricePolicy(List<PricingRule> rules) {
+        this.rules = rules;
     }
 
-    public BigDecimal getTotalDiscountPrice(BigDecimal workPrice, BigDecimal partsPrice, Priority priority) {
-        BigDecimal totalPrice = getTotalPrice(workPrice, partsPrice, priority);
-        return totalPrice.subtract(totalPrice.multiply(DISCOUNT));
+    public BigDecimal getTotalPrice(OrderPriceInfo info) {
+        BigDecimal totalPrice = info.workPrice().add(info.partsPrice());
+
+        for (PricingRule rule : rules) {
+            totalPrice = rule.apply(totalPrice, info);
+        }
+
+        return totalPrice;
     }
 }
