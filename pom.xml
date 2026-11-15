@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.5.13</version>
         <relativePath/>
     </parent>
 
@@ -22,30 +22,33 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot -->
+        <!-- Spring Boot Core -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Стартер тестів Spring Boot -->
+        <!-- Spring Data JPA + Hibernate -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- Прямі залежності на тестові пакети -->
+        <!-- PostgreSQL Driver -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.11.0</version>
-            <scope>test</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Flyway Migrations -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
         <!-- Lombok -->
@@ -54,11 +57,17 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- Тести (вже містить JUnit 5, Mockito та AssertJ) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Налаштування компілятора та процесора анотацій Lombok -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -72,7 +81,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Плагін для створення виконуваного Spring Boot jar -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -93,7 +101,6 @@
                     <argLine>-XX:+EnableDynamicAgentLoading -Xshare:off</argLine>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 </project>

@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: sto-postgres
+    environment:
+      POSTGRES_DB: sto
+      POSTGRES_USER: sto
+      POSTGRES_PASSWORD: sto
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

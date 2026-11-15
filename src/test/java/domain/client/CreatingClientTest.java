@@ -17,7 +17,7 @@ public class CreatingClientTest {
         Client client = new Client(name, surName);
 
         assertEquals(name, client.getName());
-        assertEquals(surName, client.getSureName());
+        assertEquals(surName, client.getSurName());
     }
 
     @Test

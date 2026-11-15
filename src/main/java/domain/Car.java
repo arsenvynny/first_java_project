@@ -1,35 +1,37 @@
 package domain;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "cars")
 public class Car {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "model", nullable = false)
     private String model;
+
+    @Column(name = "mark", nullable = false)
     private String mark;
+
+    @Column(name = "year", nullable = false)
     private int year;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
     private Client owner;
+
+    @Column(name = "vin_code")
     private String vinCode;
-
-    public Car(String mark, String model, int year, Client owner, String vinCode) {
-        if (vinCode == null || vinCode.isEmpty())
-            throw new IllegalArgumentException("The VIN code is invalid");
-
-        if (mark == null || mark.isEmpty())
-            throw new IllegalArgumentException("The mark is invalid");
-
-        if (model == null || model.isEmpty())
-            throw new IllegalArgumentException("The name is invalid");
-
-        this.vinCode = vinCode;
-        this.year = year;
-        this.model = model;
-        this.mark = mark;
-        this.owner = owner;
-    }
 
     @Override
     public boolean equals(Object o) {
