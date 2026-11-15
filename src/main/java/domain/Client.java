@@ -1,8 +1,12 @@
 package domain;
 
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
 public class Client {
+    private Long id;
     private String name;
     private String surName;
 
@@ -27,10 +31,6 @@ public class Client {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), surName);
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getSureName() {

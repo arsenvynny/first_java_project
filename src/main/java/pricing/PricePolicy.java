@@ -1,9 +1,12 @@
 package pricing;
 
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 import java.util.List;
 
+@Component
 public class PricePolicy {
 
     private List<PricingRule> rules;

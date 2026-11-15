@@ -19,7 +19,7 @@ public class CreatingCarTest {
     }
 
     @Test
-    void createCar_creatingCar_isCreated() {
+    void Car_constructor_setsCarFields() {
 
         String mark = "Toyota";
         String model = "Camry";
@@ -37,7 +37,7 @@ public class CreatingCarTest {
     }
 
     @Test
-    void createCar_creatingCarWithNullModel_ExceptionThrow() {
+    void Car_constructorWithNullOrEmptyModel_ExceptionThrows() {
 
         String mark = "Toyota";
         String model = null;
@@ -55,7 +55,7 @@ public class CreatingCarTest {
     }
 
     @Test
-    void createCar_creatingCarWithNullMark_ExceptionThrow() {
+    void Car_constructorWithNullOrEmptyMark_ExceptionThrows() {
 
         String mark = null;
         String model = "Camry";
@@ -73,7 +73,7 @@ public class CreatingCarTest {
     }
 
     @Test
-    void createCar_creatingCarWithNullVinCode_ExceptionThrow() {
+    void Car_constructorWithNullOrEmptyVinCode_ExceptionThrows() {
 
         String mark = "Toyota";
         String model = "Camry";

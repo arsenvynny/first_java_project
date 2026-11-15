@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class WorkTest {
 
     @Test
-    void Work_creatingWork_isCreated() {
+    void Work_constructor_setsWorkFields() {
 
         String description = "wheels change";
         String workCost = "100";
@@ -28,7 +28,7 @@ public class WorkTest {
     }
 
     @Test
-    void Work_creatingWorkWithEmptyAndNullDescription_ExceptionThrow() {
+    void Work_constructorWithInvalidDescription_ExceptionThrows() {
 
         String description = null;
         String workCost = "100";
@@ -44,7 +44,7 @@ public class WorkTest {
     }
 
     @Test
-    void Work_creatingWorkWithEmptyAndNullWorkCost_ExceptionThrow() {
+    void Work_constructorWithInvalidWorkCost_ExceptionThrows() {
 
         String description = "wheels change";
         String workCost = null;
@@ -60,7 +60,7 @@ public class WorkTest {
     }
 
     @Test
-    void Work_creatingWorkWithEmptyAndNullPartsCost_ExceptionThrow() {
+    void Work_constructorWithInvalidPartsCost_ExceptionThrows() {
 
         String description = "wheels change";
         String workCost = "100";

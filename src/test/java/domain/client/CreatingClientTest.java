@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CreatingClientTest {
 
     @Test
-    void Client_creatingClient_isCreated() {
+    void Client_constructor_setsClientFields() {
 
         String name = "Arsen";
         String surName = "Vynnytskyi";
@@ -21,7 +21,7 @@ public class CreatingClientTest {
     }
 
     @Test
-    void Client_creatingClientWithNullName_ExceptionThrows() {
+    void Client_constructorWithNullName_ExceptionThrows() {
 
         String name = null;
         String surName = "Vynnytskyi";
@@ -35,7 +35,7 @@ public class CreatingClientTest {
     }
 
     @Test
-    void Client_creatingClientWithNullSurName_ExceptionThrows() {
+    void Client_constructorWithNullSurname_ExceptionThrows() {
 
         String name = "Arsen";
         String surName = null;

@@ -1,34 +1,18 @@
 package domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Objects;
 
-
+@Data
 public class Car {
+    private Long id;
     private String model;
     private String mark;
     private int year;
     private Client owner;
     private String vinCode;
-
-    public String getVinCode() {
-        return vinCode;
-    }
-
-    public Client getOwner() {
-        return owner;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public String getModel() {
-        return model;
-    }
 
     public Car(String mark, String model, int year, Client owner, String vinCode) {
         if (vinCode == null || vinCode.isEmpty())
@@ -60,6 +44,10 @@ public class Car {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getModel(), getMark(), getYear(), getOwner(), getVinCode());
+        return Objects.hash(getModel(),
+                            getMark(),
+                            getYear(),
+                            getOwner(),
+                            getVinCode());
     }
 }

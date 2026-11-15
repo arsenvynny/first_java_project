@@ -35,7 +35,7 @@ public class CanPerformTest {
             names = {"CHASSIS", "GENERAL_SERVICE"}
 
     )
-    void canPerform_TryToPerformWorks_isPerform(Specialization specialization) {
+    void canPerform_withMatchingSpecialization_returnsTrue(Specialization specialization) {
 
         Work work = new Work("change wheels",
                 "100",
@@ -52,7 +52,7 @@ public class CanPerformTest {
             mode = EnumSource.Mode.EXCLUDE
 
     )
-    void canPerform_TryToPerformWorksWithoutAppropriateSpecializations_isPerform(
+    void canPerform_withoutMatchingSpecialization_returnsFalse(
             Specialization specialization) {
 
         Work work = new Work("change wheels",

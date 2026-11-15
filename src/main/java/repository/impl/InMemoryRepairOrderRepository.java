@@ -1,11 +1,14 @@
-package repository;
+package repository.impl;
 
 import domain.Order;
+import org.springframework.stereotype.Repository;
+import repository.RepairOrderRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class InMemoryRepairOrderRepository
         implements RepairOrderRepository {
     private static long nextId = 1;

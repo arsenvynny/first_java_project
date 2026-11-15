@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class Order {
     private Long id;
     private OrderStatus status = OrderStatus.CREATED;

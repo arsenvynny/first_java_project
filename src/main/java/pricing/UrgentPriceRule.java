@@ -1,7 +1,10 @@
 package pricing;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
+@Component
 public class UrgentPriceRule implements PricingRule {
     private static final BigDecimal URGENT_FEE = new BigDecimal("0.2");
     @Override

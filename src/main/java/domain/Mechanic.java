@@ -1,13 +1,15 @@
 package domain;
 
+import lombok.Data;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Getter
+@Data
 public class Mechanic {
+    private Long id;
     private String name;
     private boolean status = true;
     private List<Specialization> specializationList = new ArrayList<>();
@@ -27,10 +29,6 @@ public class Mechanic {
         this.name = name;
         this.specializationList = specializationList;
 
-    }
-
-    public List<Specialization> getSpecializationList() {
-        return new ArrayList<>(specializationList);
     }
 
     public void makeBusy() {

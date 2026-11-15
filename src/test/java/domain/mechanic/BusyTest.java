@@ -27,7 +27,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeBusy_TryToMakeMechanicBusy_isBusy() {
+    void makeBusy_mechanicState_changesToBusy() {
 
         mechanic.makeBusy();
 
@@ -35,7 +35,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeBusy_TryToMakeBusyAlreadyBusyMechanic_ExceptionThrow() {
+    void makeBusy_whenAlreadyBusy_ExceptionThrows() {
 
         mechanic.makeBusy();
 
@@ -43,7 +43,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeFree_TryToMakeMechanicFree_isBusy() {
+    void makeFree_mechanicState_changesToFree() {
 
         mechanic.makeBusy();
         mechanic.makeFree();
@@ -52,7 +52,7 @@ public class BusyTest {
     }
 
     @Test
-    void makeFree_TryToMakeFreeAlreadyFreeMechanic_isBusy() {
+    void makeFree_whenAlreadyFree_remainsFree() {
 
         assertThrows(IllegalStateException.class, () -> mechanic.makeFree());
 

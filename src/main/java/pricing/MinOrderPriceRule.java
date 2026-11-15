@@ -1,7 +1,10 @@
 package pricing;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
+@Component
 public class MinOrderPriceRule implements PricingRule {
     private static final BigDecimal MIN_ORDER_PRICE = new BigDecimal("100.00");
     @Override

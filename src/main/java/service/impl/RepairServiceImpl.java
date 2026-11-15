@@ -1,33 +1,22 @@
-package service;
+package service.impl;
 
 import domain.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import pricing.OrderPriceInfo;
 import pricing.PricePolicy;
 import repository.RepairOrderRepository;
+import service.RepairService;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
-public class RepairOrderService {
+@Service
+@RequiredArgsConstructor
+public class RepairServiceImpl implements RepairService {
     private final RepairOrderRepository repository;
     private final PricePolicy pricePolicy;
 
-    public RepairOrderService(RepairOrderRepository repository, PricePolicy pricePolicy) {
-        this.repository = Objects.requireNonNull(repository, "repository must not be null");
-        this.pricePolicy = Objects.requireNonNull(pricePolicy, "pricePolicy must not be null");
-    }
-
-    public Order createOrder(Car car, Priority priority) {
-        if (car == null)
-            throw new IllegalStateException("Car must be specified");
-        if (priority == null)
-            throw new IllegalStateException("Priority must be specified");
-        Order order = new Order(car, priority);
-        addEvent(order, "Repair order created", EventType.CREATED_ORDER);
-        return repository.save(order);
-    }
-
-
+    @Override
     public void addWork(Order order, Work work) {
         order = getExistingOrder(order.getId());
 
@@ -42,6 +31,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public void assignMechanic(Order order, Mechanic mechanic) {
         order = getExistingOrder(order.getId());
 
@@ -68,6 +58,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public void diagnose(Order order) {
         order = getExistingOrder(order.getId());
 
@@ -79,6 +70,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public void approve(Order order) {
         order = getExistingOrder(order.getId());
 
@@ -93,6 +85,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public void makeInProgress(Order order) {
         order = getExistingOrder(order.getId());
 
@@ -107,6 +100,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public void complete(Order order) {
         order = getExistingOrder(order.getId());
 
@@ -124,6 +118,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public void cancel(Order order) {
         order = getExistingOrder(order.getId());
 
@@ -138,6 +133,7 @@ public class RepairOrderService {
         repository.save(order);
     }
 
+    @Override
     public BigDecimal getWorkPrice(Order order) {
         BigDecimal totalWorkPrice = BigDecimal.ZERO;
         for (Work work : order.getWorks())
@@ -145,6 +141,7 @@ public class RepairOrderService {
         return totalWorkPrice;
     }
 
+    @Override
     public BigDecimal getPartsPrice(Order order) {
         BigDecimal totalPartsPrice = BigDecimal.ZERO;
         for (Work work : order.getWorks())
@@ -152,7 +149,12 @@ public class RepairOrderService {
         return totalPartsPrice;
     }
 
+    @Override
     public BigDecimal getTotalOrderPrice(Order order) {
+        return getPartsPrice(order).add(getWorkPrice(order));
+    }
+
+    public BigDecimal getCommercialOrderPrice(Order order) {
         return pricePolicy.getTotalPrice(new OrderPriceInfo(
                 getWorkPrice(order),
                 getPartsPrice(order),

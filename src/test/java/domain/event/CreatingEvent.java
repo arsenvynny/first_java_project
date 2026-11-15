@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CreatingEvent {
 
     @Test
-    void Event_creatingEvent_isCreated() {
+    void Event_constructor_setsEventFields() {
 
         String description = "Mechanic added";
         EventType eventType = EventType.APPROVED_ORDER;
@@ -22,7 +22,7 @@ public class CreatingEvent {
     }
 
     @Test
-    void Event_creatingEventWithInvalidDescription_ExceptionThrow() {
+    void Event_constructorWithInvalidDescription_ExceptionThrows() {
 
         String description = null;
         EventType eventType = EventType.APPROVED_ORDER;

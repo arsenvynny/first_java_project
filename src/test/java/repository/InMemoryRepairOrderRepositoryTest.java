@@ -3,6 +3,7 @@ package repository;
 import domain.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repository.impl.InMemoryRepairOrderRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -31,7 +32,7 @@ class InMemoryRepairOrderRepositoryTest {
     }
 
     @Test
-    void save_orderWithExistingId_replacesStoredOrder() {
+    void save_existingId_replacesStoredOrder() {
         Order originalOrder = repository.save(new Order());
         Order updatedOrder = new Order();
         updatedOrder.setId(originalOrder.getId());
@@ -43,7 +44,7 @@ class InMemoryRepairOrderRepositoryTest {
     }
 
     @Test
-    void save_orderWithUnallocatedId_throwsException() {
+    void save_unallocatedId_ExceptionThrows() {
         Order order = new Order();
         order.setId(Long.MAX_VALUE);
 
@@ -64,7 +65,7 @@ class InMemoryRepairOrderRepositoryTest {
     }
 
     @Test
-    void getCount_returnsNumberOfStoredOrders() {
+    void getCount_storedOrders_returnsCount() {
         repository.save(new Order());
         repository.save(new Order());
 

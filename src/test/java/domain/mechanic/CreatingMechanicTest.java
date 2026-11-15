@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CreatingMechanicTest {
 
     @Test
-    void Mechanic_createMechanic_isCreated() {
+    void Mechanic_constructor_setsMechanicFields() {
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class CreatingMechanicTest {
     }
 
     @Test
-    void Mechanic_createMechanicWithNullName_ExceptionThrow() {
+    void Mechanic_constructorWithNullName_ExceptionThrows() {
 
         List<Specialization> specializations = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class CreatingMechanicTest {
     }
 
     @Test
-    void Mechanic_createMechanicWithNullSpecializationListValue_ExceptionThrow() {
+    void Mechanic_constructorWithNullSpecialization_ExceptionThrows() {
 
         List<Specialization> specializations = null;
 
@@ -50,7 +50,7 @@ public class CreatingMechanicTest {
     }
 
     @Test
-    void Mechanic_createMechanicWithEmptySpecializationListValue_ExceptionThrow() {
+    void Mechanic_constructorWithEmptySpecializations_ExceptionThrows() {
 
         List<Specialization> specializations = new ArrayList<>();
 

@@ -1,7 +1,10 @@
 package pricing;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
+@Component
 public class ProfitPriceRule implements PricingRule {
     private static final BigDecimal PROFIT_MARGIN = new BigDecimal("0.30");
 

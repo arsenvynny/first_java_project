@@ -1,12 +1,14 @@
 package domain;
 
+import lombok.Data;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Getter
+@Data
 public class Work {
+    private Long id;
     private String description;
     private boolean isCompleted;
     private BigDecimal workCost;
