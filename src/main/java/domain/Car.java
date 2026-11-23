@@ -2,12 +2,12 @@ package domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Objects;
-
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -32,24 +32,4 @@ public class Car {
 
     @Column(name = "vin_code")
     private String vinCode;
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Car car = (Car) o;
-        return getYear() == car.getYear() &&
-                Objects.equals(getModel(), car.getModel()) &&
-                Objects.equals(getMark(), car.getMark()) &&
-                Objects.equals(getOwner(), car.getOwner()) &&
-                Objects.equals(getVinCode(), car.getVinCode());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getModel(),
-                            getMark(),
-                            getYear(),
-                            getOwner(),
-                            getVinCode());
-    }
 }

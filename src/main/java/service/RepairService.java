@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 public interface RepairService {
      void addWork(Order order, Work work);
+     void markWorkDone(Work work);
+     boolean isWorkCompleted(Work work);
      void assignMechanic(Order order, Mechanic mechanic);
      void diagnose(Order order);
      void approve(Order order);

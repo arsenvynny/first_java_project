@@ -3,18 +3,24 @@ package service.impl;
 import domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pricing.OrderPriceInfo;
 import pricing.PricePolicy;
 import repository.RepairOrderRepository;
+import service.MechanicService;
 import service.RepairService;
+import service.WorkService;
 
 import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RepairServiceImpl implements RepairService {
     private final RepairOrderRepository repository;
     private final PricePolicy pricePolicy;
+    private final MechanicService mechanicService;
+    private final WorkService workService;
 
     @Override
     public void addWork(Order order, Work work) {
@@ -23,12 +29,39 @@ public class RepairServiceImpl implements RepairService {
         if (order.getStatus() != OrderStatus.DIAGNOSED)
             throw new IllegalStateException("Work cannot be added to this order in its current status");
 
-        if (work == null)
-            throw new IllegalStateException("Work must be specified");
+        if (work == null || work.getId() == null)
+            throw new IllegalStateException("A persisted work item must be specified");
 
-        order.getWorks().add(work);
+        Work managedWork = workService.findById(work.getId());
+        if (managedWork.getOrder() != null
+                && !managedWork.getOrder().getId().equals(order.getId())) {
+            throw new IllegalStateException("Work is already assigned to another order");
+        }
+        if (order.getWorks().stream().noneMatch(existing -> existing.getId().equals(managedWork.getId()))) {
+            managedWork.setOrder(order);
+            order.getWorks().add(managedWork);
+        }
         addEvent(order, "Work added to repair order", EventType.WORK_ADDED);
         repository.save(order);
+    }
+
+    @Override
+    public void markWorkDone(Work work) {
+        Work managedWork = getExistingWork(work);
+        Order order = managedWork.getOrder();
+        if (order == null || order.getStatus() != OrderStatus.IN_PROGRESS) {
+            throw new IllegalStateException("Work can only be completed while its order is in progress");
+        }
+        if (managedWork.isCompleted()) {
+            throw new IllegalStateException("This work item has already been completed");
+        }
+        managedWork.setCompleted(true);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isWorkCompleted(Work work) {
+        return getExistingWork(work).isCompleted();
     }
 
     @Override
@@ -44,16 +77,20 @@ public class RepairServiceImpl implements RepairService {
         if (order.getMechanic() != null)
             throw new IllegalStateException("A mechanic has already been assigned");
 
-        if (!mechanic.isAvailable())
+        if (mechanic.getId() == null)
+            throw new IllegalArgumentException("A persisted mechanic must be specified");
+
+        mechanic = mechanicService.findById(mechanic.getId());
+        if (!mechanic.isStatus())
             throw new IllegalStateException("The mechanic is busy");
 
         for (Work work : order.getWorks()) {
-            if (!mechanic.canPerform(work))
+            if (!mechanic.getSpecializationList().contains(work.getSpecialization()))
                 throw new IllegalStateException("The mechanic does not have the required specialization");
         }
 
         order.setMechanic(mechanic);
-        mechanic.makeBusy();
+        mechanic.setStatus(false);
         addEvent(order, "Mechanic assigned", EventType.MECHANIC_ASSIGNED);
         repository.save(order);
     }
@@ -112,7 +149,7 @@ public class RepairServiceImpl implements RepairService {
                 throw new IllegalStateException("Not all work items have been completed");
         }
 
-        order.getMechanic().makeFree();
+        order.getMechanic().setStatus(true);
         order.setStatus(OrderStatus.COMPLETED);
         addEvent(order, "Repair order completed", EventType.COMPLETED_ALL_WORKS);
         repository.save(order);
@@ -127,7 +164,7 @@ public class RepairServiceImpl implements RepairService {
 
         order.setStatus(OrderStatus.CANCELLED);
         if (order.getMechanic() != null)
-            order.getMechanic().makeFree();
+            order.getMechanic().setStatus(true);
 
         addEvent(order, "Repair order cancelled", EventType.CANCELLED_ORDER);
         repository.save(order);
@@ -168,5 +205,12 @@ public class RepairServiceImpl implements RepairService {
     private Order getExistingOrder(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Repair order with id " + id + " does not exist"));
+    }
+
+    private Work getExistingWork(Work work) {
+        if (work == null || work.getId() == null) {
+            throw new IllegalArgumentException("A persisted work item must be specified");
+        }
+        return workService.findById(work.getId());
     }
 }
