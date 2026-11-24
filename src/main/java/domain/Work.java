@@ -33,7 +33,7 @@ public class Work {
     @Column(nullable = false, length = 30)
     private Specialization specialization;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 }

@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS orders (
 
 CREATE TABLE IF NOT EXISTS works (
     id              BIGSERIAL PRIMARY KEY,
-    description     VARCHAR(100) NOT NULL,
+    description     VARCHAR(255) NOT NULL,
     completed       BOOLEAN NOT NULL DEFAULT FALSE,
     work_cost       NUMERIC(12, 2) NOT NULL,
     auto_parts_cost NUMERIC(12, 2) NOT NULL,
