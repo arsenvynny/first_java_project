@@ -3,7 +3,6 @@ package service.impl;
 import domain.Car;
 import domain.Order;
 import domain.OrderStatus;
-import domain.Work;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,9 +89,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Car findCar(Car car) {
-        if (car == null || car.getId() == null) {
-            throw new IllegalArgumentException("A persisted car must be specified");
-        }
         return carRepository.findById(car.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Car with id " + car.getId() + " does not exist"));
     }

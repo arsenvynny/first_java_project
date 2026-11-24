@@ -73,8 +73,8 @@ public class CarServiceImpl implements CarService {
         if (car.getOwner() == null || car.getOwner().getId() == null) {
             throw new IllegalArgumentException("A persisted client must be specified as the car owner");
         }
-        if (car.getVinCode() == null || car.getVinCode().isBlank() || car.getVinCode().length() > 8) {
-            throw new IllegalArgumentException("VIN code must contain 1 to 8 characters");
+        if (car.getVinCode() == null || car.getVinCode().isBlank() || car.getVinCode().length() != 17) {
+            throw new IllegalArgumentException("VIN code must contain 17 characters");
         }
     }
 }

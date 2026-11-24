@@ -27,18 +27,7 @@ public class Event {
     @Column(nullable = false, length = 30)
     private EventType type;
 
-    public Event(String description, EventType type) {
-        if (description == null || description.isBlank())
-            throw new IllegalArgumentException("The event description cannot be blank");
-        if (type == null)
-            throw new IllegalArgumentException("The event type cannot be null");
-
-        this.description = description;
-        this.type = type;
-        this.time = LocalDateTime.now();
-    }
-
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 }

@@ -59,20 +59,13 @@ public class RepairOrderManagerImpl implements RepairOrderManager {
             throw new IllegalArgumentException("A persisted work item must be specified");
         }
 
-        for (Work requestedWork : works) {
-            if (requestedWork.getId() == null) {
-                throw new IllegalArgumentException("A persisted work item must be specified");
-            }
-            Work work = workService.findById(requestedWork.getId());
-            if (work.getOrder() != null && !work.getOrder().getId().equals(order.getId())) {
-                throw new IllegalStateException("Work is already assigned to another order");
-            }
-            if (order.getWorks().stream().noneMatch(existing -> existing.getId().equals(work.getId()))) {
-                work.setOrder(order);
-                order.getWorks().add(work);
-            }
-            addEvent(order, "Work " + work.getId() + " added to repair order", EventType.WORK_ADDED);
-        }
+        works.stream()
+                .map(workService::create)
+                .forEach(saved -> {
+                    saved.setOrder(order);
+                    order.getWorks().add(saved);
+                    addEvent(order, "Work " + saved.getId() + " added to repair order", EventType.WORK_ADDED);
+                });
     }
 
     @Override

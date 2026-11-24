@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.TimeZone;
 
-@SpringBootApplication(scanBasePackages = {"app", "config", "pricing", "repository", "runner", "service"})
+@SpringBootApplication(scanBasePackages = {
+        "app", "config", "pricing", "repository", "runner", "service", "manager"
+})
 @EntityScan(basePackages = {"domain"})
 @EnableJpaRepositories("repository")
 public class CarServiceDemo {

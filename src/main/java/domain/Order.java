@@ -24,14 +24,14 @@ public class Order {
     @Column(nullable = false, length = 20)
     private OrderStatus status = OrderStatus.CREATED;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
     @OneToMany(mappedBy = "order")
     private List<Work> works = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mechanic_id")
     private Mechanic mechanic;
 

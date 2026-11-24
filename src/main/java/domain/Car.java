@@ -26,7 +26,7 @@ public class Car {
     @Column(name = "year", nullable = false)
     private int year;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private Client owner;
 

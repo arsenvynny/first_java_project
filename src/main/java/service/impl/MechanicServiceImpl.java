@@ -70,10 +70,5 @@ public class MechanicServiceImpl implements MechanicService {
                 != mechanic.getSpecializationList().size()) {
             throw new IllegalArgumentException("Mechanic specializations must be unique");
         }
-        if (mechanic.getSpecializationList().stream()
-                .map(Enum::name)
-                .anyMatch(name -> name.length() > 30)) {
-            throw new IllegalArgumentException("Specialization names cannot exceed 30 characters");
-        }
     }
 }
