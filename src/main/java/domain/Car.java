@@ -30,6 +30,6 @@ public class Car {
     @JoinColumn(name = "owner_id", nullable = false)
     private Client owner;
 
-    @Column(name = "vin_code")
+    @Column(name = "vin_code", nullable = false, unique = true)
     private String vinCode;
 }

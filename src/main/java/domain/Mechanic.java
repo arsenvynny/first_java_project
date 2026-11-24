@@ -22,7 +22,7 @@ public class Mechanic {
     private String name;
 
     @Column(name = "available", nullable = false)
-    private boolean status = true;
+    private boolean available = true;
 
     @ElementCollection
     @CollectionTable(name = "mechanic_specializations", joinColumns = @JoinColumn(name = "mechanic_id"))

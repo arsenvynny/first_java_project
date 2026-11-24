@@ -1,7 +1,6 @@
 package service.impl;
 
 import domain.Mechanic;
-import dto.MechanicDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +16,25 @@ public class MechanicServiceImpl implements MechanicService {
     private final MechanicRepository repository;
 
     @Override
-    public Mechanic create(MechanicDTO mechanicDTO) {
-        throw new UnsupportedOperationException("MechanicDTO does not contain mechanic fields");
+    public Mechanic create(Mechanic mechanic) {
+        validate(mechanic);
+        if (mechanic.getId() != null) {
+            throw new IllegalArgumentException("A new mechanic must not already have an id");
+        }
+        mechanic.setAvailable(true);
+        return repository.save(mechanic);
     }
 
     @Override
-    public Mechanic update(MechanicDTO mechanicDTO) {
-        throw new UnsupportedOperationException("MechanicDTO does not contain mechanic fields");
+    public Mechanic update(Mechanic mechanic) {
+        validate(mechanic);
+        if (mechanic.getId() == null) {
+            throw new IllegalArgumentException("A persisted mechanic must be specified for update");
+        }
+        Mechanic existing = findById(mechanic.getId());
+        existing.setName(mechanic.getName());
+        existing.setSpecializationList(mechanic.getSpecializationList());
+        return repository.save(existing);
     }
 
     @Override
@@ -41,6 +52,28 @@ public class MechanicServiceImpl implements MechanicService {
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        repository.delete(findById(id));
+    }
+
+    private void validate(Mechanic mechanic) {
+        if (mechanic == null) {
+            throw new IllegalArgumentException("Mechanic must be specified");
+        }
+        if (mechanic.getName() == null || mechanic.getName().isBlank() || mechanic.getName().length() > 50) {
+            throw new IllegalArgumentException("Mechanic name must contain 1 to 50 characters");
+        }
+        if (mechanic.getSpecializationList() == null || mechanic.getSpecializationList().isEmpty()
+                || mechanic.getSpecializationList().stream().anyMatch(java.util.Objects::isNull)) {
+            throw new IllegalArgumentException("At least one valid specialization must be specified");
+        }
+        if (mechanic.getSpecializationList().stream().distinct().count()
+                != mechanic.getSpecializationList().size()) {
+            throw new IllegalArgumentException("Mechanic specializations must be unique");
+        }
+        if (mechanic.getSpecializationList().stream()
+                .map(Enum::name)
+                .anyMatch(name -> name.length() > 30)) {
+            throw new IllegalArgumentException("Specialization names cannot exceed 30 characters");
+        }
     }
 }

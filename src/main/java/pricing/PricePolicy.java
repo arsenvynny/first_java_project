@@ -17,11 +17,10 @@ public class PricePolicy {
 
     public BigDecimal getTotalPrice(OrderPriceInfo info) {
         BigDecimal totalPrice = info.workPrice().add(info.partsPrice());
-
-        for (PricingRule rule : rules) {
-            totalPrice = rule.apply(totalPrice, info);
-        }
-
-        return totalPrice;
+        PricingRule combinedRule = rules.stream()
+                .reduce((first, second) ->
+                        (price, orderInfo) -> second.apply(first.apply(price, orderInfo), orderInfo))
+                .orElse((price, orderInfo) -> price);
+        return combinedRule.apply(totalPrice, info);
     }
 }

@@ -15,12 +15,15 @@ CREATE TABLE IF NOT EXISTS orders (
     status      VARCHAR(20) NOT NULL,
     car_id      BIGINT NOT NULL REFERENCES cars (id),
     mechanic_id BIGINT REFERENCES mechanics (id),
-    priority    VARCHAR(20) NOT NULL
+    priority    VARCHAR(20) NOT NULL,
+    final_cost  NUMERIC(12, 2),
+    completed_at TIMESTAMP,
+    version     BIGINT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS works (
     id              BIGSERIAL PRIMARY KEY,
-    description     VARCHAR(255) NOT NULL,
+    description     VARCHAR(100) NOT NULL,
     completed       BOOLEAN NOT NULL DEFAULT FALSE,
     work_cost       NUMERIC(12, 2) NOT NULL,
     auto_parts_cost NUMERIC(12, 2) NOT NULL,

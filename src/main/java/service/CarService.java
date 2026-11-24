@@ -1,14 +1,13 @@
 package service;
 
 import domain.Car;
-import dto.CarDTO;
 
 import java.util.List;
 
 public interface CarService {
-    Car create(CarDTO carDTO);
+    Car create(Car car);
     Car findById(Long id);
     List<Car> findAll();
-    Car update(CarDTO carDTO);
+    Car update(Car car);
     void delete(Long id);
 }

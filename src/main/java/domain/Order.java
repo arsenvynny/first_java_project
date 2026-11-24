@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,17 @@ public class Order {
     @Column(nullable = false, length = 20)
     private Priority priority;
 
-    @Transient
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OrderBy("time ASC, id ASC")
     private List<Event> events = new ArrayList<>();
+
+    @Column(name = "final_cost", precision = 12, scale = 2)
+    private BigDecimal finalCost;
+
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
 }

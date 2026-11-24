@@ -1,14 +1,13 @@
 package service;
 
 import domain.Client;
-import dto.ClientDTO;
 
 import java.util.List;
 
 public interface ClientService {
-    Client create(ClientDTO clientDTO);
+    Client create(Client client);
     Client findById(Long id);
     List<Client> findAll();
-    Client update(ClientDTO clientDTO);
+    Client update(Client client);
     void delete(Long id);
 }

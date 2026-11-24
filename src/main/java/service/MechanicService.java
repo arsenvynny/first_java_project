@@ -1,13 +1,12 @@
 package service;
 
 import domain.Mechanic;
-import dto.MechanicDTO;
 
 import java.util.List;
 
 public interface MechanicService {
-    Mechanic create(MechanicDTO mechanicDTO);
-    Mechanic update(MechanicDTO mechanicDTO);
+    Mechanic create(Mechanic mechanic);
+    Mechanic update(Mechanic mechanic);
     Mechanic findById(Long id);
     List<Mechanic> findAll();
     void delete(Long id);
